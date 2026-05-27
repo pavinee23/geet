@@ -1447,6 +1447,115 @@ body {
 
 .get-footer-bottom-links a:hover { color: #fff; }
 
+.get-footer-bottom-links .get-footer-link {
+  font-size: 12px;
+  color: var(--get-text3);
+  text-decoration: none;
+  transition: color 0.15s;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.get-footer-bottom-links .get-footer-link:hover { color: #fff; }
+
+.get-footer-link {
+  font-size: 13px;
+  color: var(--get-text2);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.get-footer-link:hover { color: #60a5fa; }
+
+/* ── Legal modal (Privacy/Terms/Portals) ─────────────────────────────── */
+.get-legal-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(24px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.get-legal-modal {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.1rem 1.15rem 1.25rem;
+  margin: auto 0;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+  border: 1px solid rgba(22, 163, 74, 0.18);
+}
+
+.get-legal-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.get-legal-modal h3 {
+  margin: 0 2.25rem 0.65rem 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.get-legal-body {
+  font-size: 0.9rem;
+  color: #334155;
+  line-height: 1.65;
+}
+
+.get-legal-body ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.get-legal-portals {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.get-legal-portals a {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  background: rgba(22, 163, 74, 0.06);
+  color: #166534;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.get-legal-portals a:hover {
+  background: rgba(22, 163, 74, 0.14);
+}
+
 /* ── Light Eco Theme overrides ─────────────────────────────────────── */
 :root {
   --get-blue: #1d4ed8;
@@ -1580,6 +1689,317 @@ body {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
+}
+
+/* ── Shipment tracking page ─────────────────────────────────────────── */
+.get-track-page {
+  min-height: 100dvh;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(22, 163, 74, 0.12), transparent),
+    linear-gradient(180deg, #f0fdf4 0%, #f8fafc 45%, #eff6ff 100%);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.get-track-shell {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.get-track-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.get-track-brand img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.get-track-brand span {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #14532d;
+  letter-spacing: -0.02em;
+}
+
+.get-track-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid rgba(22, 101, 52, 0.12);
+  box-shadow:
+    0 4px 6px -1px rgba(15, 23, 42, 0.06),
+    0 20px 40px -12px rgba(22, 163, 74, 0.12);
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+.get-track-title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+}
+
+.get-track-sub {
+  margin: 0 0 1.25rem;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.get-track-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 1rem;
+  padding: 4px;
+  background: #f1f5f9;
+  border-radius: 12px;
+}
+
+.get-track-tab {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.get-track-tab.is-active {
+  background: #fff;
+  color: #166534;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.get-track-field {
+  margin-bottom: 1rem;
+}
+
+.get-track-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.get-track-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.get-track-field input:focus {
+  outline: none;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  background: #fff;
+}
+
+.get-track-error {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.9rem;
+  border: 1px solid #fecaca;
+}
+
+.get-track-submit {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.get-track-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+}
+
+.get-track-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.get-track-result {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.get-track-result-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.get-track-order-id {
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.95rem;
+  color: #334155;
+  background: #f1f5f9;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.get-track-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.get-track-status-badge--shipped {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.get-track-status-badge--delivered {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.get-track-status-badge--pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.get-track-meta {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 1rem;
+}
+
+.get-track-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.get-track-timeline li {
+  display: flex;
+  gap: 14px;
+  padding: 0 0 1.25rem 0;
+  position: relative;
+}
+
+.get-track-timeline li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 28px;
+  bottom: 0;
+  width: 2px;
+  background: #e2e8f0;
+}
+
+.get-track-timeline li.is-done:not(:last-child)::before {
+  background: linear-gradient(180deg, #22c55e, #e2e8f0);
+}
+
+.get-track-dot {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: transparent;
+  z-index: 1;
+}
+
+.get-track-timeline li.is-done .get-track-dot {
+  border-color: #22c55e;
+  background: #22c55e;
+  color: #fff;
+}
+
+.get-track-step-text {
+  padding-top: 2px;
+  font-size: 0.95rem;
+  color: #94a3b8;
+}
+
+.get-track-timeline li.is-done .get-track-step-text {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.get-track-footer {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.get-track-back {
+  color: #166534;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.get-track-back:hover {
+  text-decoration: underline;
+}
+
+.get-track-hub-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.get-track-hub-links a {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #475569;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.get-track-hub-links a:hover {
+  background: #dcfce7;
+  color: #166534;
 }
 
 /* ── Responsive ─────────────────────────────────────────────────────── */

@@ -7,6 +7,7 @@ import {
   METER_ORDER_BANK,
 } from '@/lib/meter-order';
 import { getMeterOrderCopy } from '@/lib/ge-energy-tech-meter-order-i18n';
+import { geEnergyTechApiUrl } from '@/lib/ge-energy-tech-api';
 
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
 const ACCEPT_IMAGE = 'image/jpeg,image/png,image/webp';
@@ -148,7 +149,10 @@ export default function MeterOrderModal({ open, onClose, lang }) {
     fd.append('paymentSlip', slipFile);
 
     try {
-      const res = await fetch('/api/ge-energy-tech/meter-order', { method: 'POST', body: fd });
+      const res = await fetch(geEnergyTechApiUrl('/api/ge-energy-tech/meter-order'), {
+        method: 'POST',
+        body: fd,
+      });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error || t.errGeneric);

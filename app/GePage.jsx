@@ -1,7 +1,8 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { getNavExtraLabels } from '@/lib/ge-energy-tech/customer-tools-i18n';
 import { SMART_METER_PRODUCT_ID } from '@/lib/meter-order';
 import { getMeterOrderCopy } from '@/lib/ge-energy-tech-meter-order-i18n';
 import MeterOrderModal from '@/components/ge-energy-tech/MeterOrderModal';
@@ -123,7 +124,32 @@ const TRANSLATIONS = {
         { icon: '📊', title: 'ระบบบริหารจัดการพลังงาน (EMS)', desc: 'แพลตฟอร์มดิจิทัลสำหรับวิเคราะห์ มอนิเตอร์ และบริหารจัดการการใช้พลังงานองค์กรแบบครบวงจร ด้วย Dashboard และ AI Insight แบบเรียลไทม์', tags: ['EMS', 'Energy Management', 'AI Dashboard'], color: '#7c3aed' },
       ],
     },
-    footer: { services: 'บริการ', systems: 'ระบบ', rights: 'สงวนลิขสิทธิ์', privacy: 'ความเป็นส่วนตัว', terms: 'เงื่อนไข', portals: 'พอร์ทัลทั้งหมด' },
+    footer: {
+      services: 'บริการ',
+      systems: 'ระบบ',
+      rights: 'สงวนลิขสิทธิ์',
+      privacy: 'ความเป็นส่วนตัว',
+      terms: 'เงื่อนไข',
+      portals: 'พอร์ทัลทั้งหมด',
+      privacyTitle: 'นโยบายความเป็นส่วนตัว',
+      privacyBody: [
+        'เราให้ความสำคัญกับความเป็นส่วนตัวของคุณ',
+        'ข้อมูลที่คุณส่งผ่านแบบฟอร์ม (เช่น อีเมล/ชื่อ/ข้อความ/เอกสารแนบ) ใช้เพื่อการติดต่อกลับและให้บริการเท่านั้น',
+        'เราไม่ขายข้อมูลส่วนบุคคลให้บุคคลที่สาม',
+      ],
+      termsTitle: 'ข้อกำหนดและเงื่อนไข',
+      termsBody: [
+        'การใช้งานเว็บไซต์นี้ถือว่าคุณยอมรับเงื่อนไขการใช้งาน',
+        'ข้อมูลราคา/สเปกอาจเปลี่ยนแปลงได้ตามการประเมินหน้างานและรายละเอียดทางเทคนิค',
+        'คำสั่งซื้อจะได้รับการยืนยันเมื่อทีมงานตรวจสอบข้อมูลและหลักฐานการโอนเงินแล้ว',
+      ],
+      portalsTitle: 'พอร์ทัลทั้งหมด',
+      portalsBody: [
+        'พอร์ทัลลูกค้า: ลงทะเบียน/ลงชื่อเข้าใช้เพื่อเข้าหน้า Customer Dashboard',
+        'ติดตามการจัดส่งสินค้า: ตรวจสอบสถานะด้วยอีเมลหรือเลขที่ใบสั่งซื้อ',
+        'บริการหลังการขาย: แชทกับเจ้าหน้าที่เพื่อรับการช่วยเหลือ',
+      ],
+    },
   },
   en: {
     nav: {
@@ -208,7 +234,32 @@ const TRANSLATIONS = {
         { icon: '📊', title: 'Energy Management System (EMS)', desc: 'End-to-end digital platform for analyzing, monitoring, and managing enterprise energy usage with real-time dashboards and AI-driven insights.', tags: ['EMS', 'Energy Management', 'AI Dashboard'], color: '#7c3aed' },
       ],
     },
-    footer: { services: 'Services', systems: 'Systems', rights: 'All rights reserved.', privacy: 'Privacy', terms: 'Terms', portals: 'Portals' },
+    footer: {
+      services: 'Services',
+      systems: 'Systems',
+      rights: 'All rights reserved.',
+      privacy: 'Privacy',
+      terms: 'Terms',
+      portals: 'Portals',
+      privacyTitle: 'Privacy Policy',
+      privacyBody: [
+        'We take your privacy seriously.',
+        'Information you submit (email/name/message/attachments) is used only to respond and provide our services.',
+        'We do not sell personal data to third parties.',
+      ],
+      termsTitle: 'Terms & Conditions',
+      termsBody: [
+        'By using this website, you agree to these terms.',
+        'Prices/specifications may change based on site assessment and technical requirements.',
+        'Orders are confirmed after our team verifies your details and payment slip.',
+      ],
+      portalsTitle: 'Portals',
+      portalsBody: [
+        'Customer portal: register/sign in to access the Customer Dashboard.',
+        'Shipment tracking: check updates using email or order number.',
+        'After-sales support: chat with our staff for assistance.',
+      ],
+    },
   },
 };
 
@@ -403,6 +454,7 @@ export default function GePage() {
     message: '',
   });
   const [meterOrderOpen, setMeterOrderOpen] = useState(false);
+  const [legalOpen, setLegalOpen] = useState(null);
 
   useEffect(() => {
     const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
@@ -417,8 +469,25 @@ export default function GePage() {
   }, [lang]);
 
   const t = useMemo(() => TRANSLATIONS[lang] || TRANSLATIONS[FALLBACK_LANG], [lang]);
+  const navExtra = useMemo(() => getNavExtraLabels(lang), [lang]);
   const meterT = useMemo(() => getMeterOrderCopy(lang), [lang]);
   const submitLabel = submitState.status === 'sending' ? t.contact.sending : t.contact.submit;
+  const legalTitle =
+    legalOpen === 'privacy'
+      ? t.footer.privacyTitle
+      : legalOpen === 'terms'
+        ? t.footer.termsTitle
+        : legalOpen === 'portals'
+          ? t.footer.portalsTitle
+          : '';
+  const legalBody =
+    legalOpen === 'privacy'
+      ? t.footer.privacyBody
+      : legalOpen === 'terms'
+        ? t.footer.termsBody
+        : legalOpen === 'portals'
+          ? t.footer.portalsBody
+          : [];
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -466,12 +535,14 @@ export default function GePage() {
           <a href="#products">{t.nav.products}</a>
           <a href="#technology">{t.nav.technology}</a>
           <a href="#contact">{t.nav.contact}</a>
+          <a href="/shipping-tracking">{navExtra.tracking}</a>
+          <a href="/after-sales-chat">{navExtra.afterSales}</a>
         </div>
         <div className="get-nav-actions">
           <a href={portalHref('/ge-energy-erp-login')} className="get-nav-btn get-nav-btn--admin">
             {t.nav.admin}
           </a>
-          <a href={portalHref('/register')} className="get-nav-btn get-nav-btn--register">
+          <a href={portalHref('/register-geet')} className="get-nav-btn get-nav-btn--register">
             {t.nav.register}
           </a>
           <a href={portalHref('/ge-energy-tech/login')} className="get-nav-btn get-nav-btn--signin">
@@ -518,7 +589,7 @@ export default function GePage() {
               </a>
             </div>
             <div className="get-hero-platform">
-              <a href={portalHref('/register')} className="get-hero-platform-btn">{t.nav.register}</a>
+              <a href={portalHref('/register-geet')} className="get-hero-platform-btn">{t.nav.register}</a>
               <a href={portalHref('/ge-energy-tech/login')} className="get-hero-platform-btn get-hero-platform-btn--primary">{t.nav.signIn}</a>
               <a href={portalHref('/ge-energy-erp-login')} className="get-hero-platform-btn get-hero-platform-btn--admin">{t.nav.admin}</a>
             </div>
@@ -828,7 +899,11 @@ export default function GePage() {
               <ul>
                 <li><a href="#contact">Contact Team</a></li>
                 <li><a href="#services">Energy Dashboard</a></li>
-                <li><a href="#about">{t.footer.portals}</a></li>
+                <li>
+                  <button type="button" className="get-footer-link" onClick={() => setLegalOpen('portals')}>
+                    {t.footer.portals}
+                  </button>
+                </li>
                 <li><a href="#hero">Home</a></li>
               </ul>
             </div>
@@ -836,13 +911,51 @@ export default function GePage() {
           <div className="get-footer-bottom">
             <p>© {new Date().getFullYear()} GE Energy Tech Co., Ltd. {t.footer.rights}</p>
             <div className="get-footer-bottom-links">
-              <a href="#about">{t.footer.privacy}</a>
-              <a href="#about">{t.footer.terms}</a>
-              <a href="#about">{t.footer.portals}</a>
+              <button type="button" className="get-footer-link" onClick={() => setLegalOpen('privacy')}>
+                {t.footer.privacy}
+              </button>
+              <button type="button" className="get-footer-link" onClick={() => setLegalOpen('terms')}>
+                {t.footer.terms}
+              </button>
+              <button type="button" className="get-footer-link" onClick={() => setLegalOpen('portals')}>
+                {t.footer.portals}
+              </button>
             </div>
           </div>
         </div>
       </footer>
+
+      {legalOpen ? (
+        <div className="get-legal-modal-overlay" role="presentation" onClick={() => setLegalOpen(null)}>
+          <div className="get-legal-modal" role="dialog" aria-modal="true" aria-labelledby="get-legal-title" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="get-legal-modal-close" onClick={() => setLegalOpen(null)} aria-label="Close">
+              ×
+            </button>
+            <h3 id="get-legal-title">{legalTitle}</h3>
+            <div className="get-legal-body">
+              {Array.isArray(legalBody) ? (
+                <ul>
+                  {legalBody.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{String(legalBody)}</p>
+              )}
+              {legalOpen === 'portals' ? (
+                <div className="get-legal-portals">
+                  <a href={portalHref('/register-geet')}>Register</a>
+                  <a href={portalHref('/ge-energy-tech/login')}>Sign In</a>
+                  <a href={portalHref('/ge-energy-erp-login')}>Admin</a>
+                  <a href="/shipping-tracking">Shipping Tracking</a>
+                  <a href="/after-sales-chat">After-Sales Chat</a>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }
+
