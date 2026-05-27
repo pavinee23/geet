@@ -383,8 +383,8 @@ const CREDENTIALS = [
     icon: '📜',
     name: { th: 'หนังสือรับรอง', en: 'Certifications' },
     desc: {
-      th: 'มาตรฐานด้านคุณภาพ ความปลอดภัยไฟฟ้า และการอบรมทีมวิศวกร/เทคนิคอย่างสม่ำเสมอ',
-      en: 'Quality, electrical safety, and technical training credentials that strengthen operational standards.',
+      th: 'การรับรองมาตรฐาน MVP / ISO พร้อมมาตรฐานด้านคุณภาพและความปลอดภัยไฟฟ้า รวมถึงการอบรมทีมวิศวกร/เทคนิคอย่างสม่ำเสมอ • อ้างอิง: ISO 14064-2:2019, T-VER Monitoring Report Guidelines',
+      en: 'MVP / ISO certifications, plus quality, electrical safety, and continuous technical training credentials. Reference: ISO 14064-2:2019 §6.3 (Monitoring, measurement and metering) and T-VER Monitoring Report Guidelines.',
     },
   },
   {
