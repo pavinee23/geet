@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // disable Turbopack so we use standard webpack (avoids UTF-8 rope issue)
+  experimental: {},
 };
 
 export default nextConfig;
