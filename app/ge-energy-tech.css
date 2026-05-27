@@ -845,6 +845,316 @@ body {
   color: #fff;
 }
 
+.get-product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.get-product-order {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--prod-color, #7c3aed);
+  transition: opacity 0.15s, transform 0.12s;
+}
+
+.get-product-order:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+/* ── Meter order modal ──────────────────────────────────────────────── */
+.get-meter-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(24px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.get-meter-modal {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.25rem 1.15rem 1.35rem;
+  margin: auto 0;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.get-meter-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.get-meter-modal-head h2 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.35rem;
+  padding-right: 2rem;
+}
+
+.get-meter-modal-head p {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin: 0 0 1rem;
+}
+
+.get-meter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.get-meter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.get-meter-field--full {
+  grid-column: 1 / -1;
+}
+
+.get-meter-field span,
+.get-meter-upload-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.get-meter-field input,
+.get-meter-field textarea,
+.get-meter-qty-input {
+  font-size: 16px;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  font-family: inherit;
+}
+
+.get-meter-field textarea {
+  resize: vertical;
+  min-height: 3.5rem;
+}
+
+.get-meter-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.get-meter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.get-meter-btn--calc {
+  width: 100%;
+  background: linear-gradient(135deg, #7c3aed, #1565c0);
+  color: #fff;
+}
+
+.get-meter-btn--primary {
+  width: 100%;
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, #16a34a, #1565c0);
+  color: #fff;
+}
+
+.get-meter-btn--primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.get-meter-btn--ghost {
+  width: 100%;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  margin-bottom: 0.5rem;
+}
+
+.get-meter-upload-row {
+  margin: 0.85rem 0;
+}
+
+.get-meter-preview-card {
+  min-height: 140px;
+  border-radius: 10px;
+  border: 2px dashed #cbd5e1;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.get-meter-preview-img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+}
+
+.get-meter-preview-empty {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.get-meter-price-card,
+.get-meter-bank-card {
+  margin: 0.75rem 0;
+  padding: 0.85rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+
+.get-meter-price-card {
+  background: linear-gradient(180deg, #f5f3ff 0%, #f0fdf4 100%);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+}
+
+.get-meter-price-card h3,
+.get-meter-bank-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.get-meter-price-card dl {
+  margin: 0;
+}
+
+.get-meter-price-card div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0.25rem 0;
+}
+
+.get-meter-price-card dt {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.get-meter-price-card dd {
+  margin: 0;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.get-meter-price-total dd {
+  color: #166534;
+  font-size: 1.05rem;
+}
+
+.get-meter-qty-input {
+  width: 5rem;
+  text-align: center;
+}
+
+.get-meter-bank-card {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+}
+
+.get-meter-bank-card p {
+  margin: 0.2rem 0;
+  color: #334155;
+}
+
+.get-meter-slip-block {
+  margin: 0.75rem 0;
+}
+
+.get-meter-error {
+  font-size: 0.82rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  margin: 0.5rem 0 0;
+}
+
+.get-meter-success {
+  text-align: center;
+  padding: 1.5rem 0.5rem;
+}
+
+.get-meter-success-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 1.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.get-meter-success h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+  color: #0f172a;
+}
+
+.get-meter-success p {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .get-meter-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Stats banner ───────────────────────────────────────────────────── */
 .get-stats-banner {
   background: linear-gradient(135deg, rgba(21,101,192,0.18) 0%, rgba(46,125,50,0.14) 100%);

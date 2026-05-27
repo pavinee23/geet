@@ -2,13 +2,21 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { SMART_METER_PRODUCT_ID } from '@/lib/meter-order';
+import { getMeterOrderCopy } from '@/lib/ge-energy-tech-meter-order-i18n';
+import MeterOrderModal from '@/components/ge-energy-tech/MeterOrderModal';
 
 const LANGUAGE_STORAGE_KEY = 'ge-energy-tech-lang';
 
-const PORTAL_BASE = (process.env.NEXT_PUBLIC_PORTAL_BASE_URL || '').replace(/\/$/, '');
+const PORTAL_BASE = (
+  process.env.NEXT_PUBLIC_PORTAL_BASE_URL ||
+  process.env.NEXT_PUBLIC_PUBLIC_HUB_URL ||
+  'https://strong-dory-enabled.ngrok-free.app'
+).replace(/\/$/, '');
 
 function portalHref(path) {
-  return PORTAL_BASE ? `${PORTAL_BASE}${path}` : '#contact';
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return `${PORTAL_BASE}${normalized}`;
 }
 
 /** Pick localized string: lang code → en → th */
@@ -88,6 +96,7 @@ const TRANSLATIONS = {
       sub: 'ทีมงานพร้อมให้คำปรึกษา ออกแบบโซลูชัน และประเมินงบประมาณให้โดยไม่มีค่าใช้จ่าย',
       company: 'บริษัท',
       address: 'ที่อยู่',
+      addressValue: 'สาธารณรัฐเกาหลี',
       systems: 'ระบบ',
       languages: 'ภาษา',
       formTitle: 'ส่งข้อความถึงเรา',
@@ -172,6 +181,7 @@ const TRANSLATIONS = {
       sub: 'Our team is ready to consult, design, and estimate your project with no upfront fee.',
       company: 'Company',
       address: 'Address',
+      addressValue: 'Republic of Korea',
       systems: 'Systems',
       languages: 'Languages',
       formTitle: 'Send us a message',
@@ -247,7 +257,7 @@ const LANGUAGE_OVERRIDES = {
     services: { badge: '서비스', title: ['통합 솔루션', '모든 비즈니스를 위해'], sub: 'IoT 장치 개발·배포부터 AI 에너지 모니터링·분석 플랫폼까지 엔드투엔드 서비스를 제공합니다.' },
     products: { badge: '제품 소개', title: ['혁신', '에너지 제품'], sub: 'GE Energy Tech 엔지니어가 설계한 최고 효율의 에너지 장치 및 시스템.', inquiry: '제품 문의' },
     tech: { badge: '기술 스택', title: ['최신', '핵심 기술로 구축'], sub: '그린 전환과 넷제로 목표를 지원하는 신에너지 기술 혁신을 지속합니다.' },
-    contact: { badge: '문의', title: ['프로젝트를', '시작할 준비가 되셨나요?'], head: '지금 상담해 보세요', sub: '무료 상담, 솔루션 설계, 예산 견적을 제공합니다.', submit: '메시지 보내기 →', sending: '전송 중...', success: '메시지가 전송되었습니다. 이메일로 답변드리겠습니다.', error: '전송에 실패했습니다. 다시 시도해 주세요.' },
+    contact: { badge: '문의', title: ['프로젝트를', '시작할 준비가 되셨나요?'], head: '지금 상담해 보세요', sub: '무료 상담, 솔루션 설계, 예산 견적을 제공합니다.', addressValue: '대한민국', submit: '메시지 보내기 →', sending: '전송 중...', success: '메시지가 전송되었습니다. 이메일로 답변드리겠습니다.', error: '전송에 실패했습니다. 다시 시도해 주세요.' },
     footer: { services: '서비스', systems: '시스템', rights: '모든 권리 보유.', privacy: '개인정보', terms: '이용약관', portals: '포털' },
   },
   ja: {
@@ -349,6 +359,7 @@ const PRODUCTS = [
     badge: { th: 'ใหม่', en: 'New' },
   },
   {
+    id: SMART_METER_PRODUCT_ID,
     icon: '📊',
     category: { th: 'มิเตอร์อัจฉริยะ', en: 'Smart Meter' },
     name: { th: 'GE-IoT Power Meter', en: 'GE-IoT Power Meter' },
@@ -391,6 +402,7 @@ export default function GePage() {
     status: 'idle',
     message: '',
   });
+  const [meterOrderOpen, setMeterOrderOpen] = useState(false);
 
   useEffect(() => {
     const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
@@ -405,6 +417,7 @@ export default function GePage() {
   }, [lang]);
 
   const t = useMemo(() => TRANSLATIONS[lang] || TRANSLATIONS[FALLBACK_LANG], [lang]);
+  const meterT = useMemo(() => getMeterOrderCopy(lang), [lang]);
   const submitLabel = submitState.status === 'sending' ? t.contact.sending : t.contact.submit;
 
   const handleInputChange = (event) => {
@@ -633,12 +646,27 @@ export default function GePage() {
                     <span key={s} className="get-product-spec">{s}</span>
                   ))}
                 </div>
-                <a href="#contact" className="get-product-inquiry">{t.products.inquiry} →</a>
+                <div className="get-product-actions">
+                  {p.id === SMART_METER_PRODUCT_ID ? (
+                    <button
+                      type="button"
+                      className="get-product-order"
+                      onClick={() => setMeterOrderOpen(true)}
+                    >
+                      {meterT.orderBtn} →
+                    </button>
+                  ) : null}
+                  <a href="#contact" className="get-product-inquiry">
+                    {p.id === SMART_METER_PRODUCT_ID ? meterT.inquiry : t.products.inquiry} →
+                  </a>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      <MeterOrderModal open={meterOrderOpen} onClose={() => setMeterOrderOpen(false)} lang={lang} />
 
       <div className="get-stats-banner">
         <div className="get-container">
@@ -698,7 +726,7 @@ export default function GePage() {
                   <span className="get-contact-item-icon">📍</span>
                   <div className="get-contact-item-text">
                     <strong>{t.contact.address}</strong>
-                    <span>Thailand -- Republic Korea</span>
+                    <span>{t.contact.addressValue}</span>
                   </div>
                 </div>
                 <div className="get-contact-item">
