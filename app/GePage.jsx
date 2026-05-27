@@ -1,79 +1,134 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
 const LANGUAGE_STORAGE_KEY = 'ge-energy-tech-lang';
 
+const PORTAL_BASE = (process.env.NEXT_PUBLIC_PORTAL_BASE_URL || '').replace(/\/$/, '');
+
+function portalHref(path) {
+  return PORTAL_BASE ? `${PORTAL_BASE}${path}` : '#contact';
+}
+
+/** Pick localized string: lang code ? en ? th */
+function pickLang(record, lang) {
+  if (!record) return '';
+  if (typeof record === 'string') return record;
+  if (record[lang]) return record[lang];
+  if (lang === 'zh-tw' && record.zh) return record.zh;
+  return record.en || record.th || '';
+}
+
 const LANGUAGE_OPTIONS = [
-  { code: 'th', label: 'ไทย' },
-  { code: 'zh', label: '中文' },
-  { code: 'vi', label: 'Tiếng Việt' },
+  { code: 'th', label: '???' },
+  { code: 'zh', label: '??' },
+  { code: 'vi', label: 'Ti?ng Vi?t' },
   { code: 'en', label: 'English' },
-  { code: 'ko', label: '한국어' },
-  { code: 'ja', label: '日本語' },
-  { code: 'zh-tw', label: '繁體中文' },
+  { code: 'ko', label: '???' },
+  { code: 'ja', label: '???' },
+  { code: 'zh-tw', label: '????' },
   { code: 'ms', label: 'Bahasa Melayu' },
 ];
 
 const TRANSLATIONS = {
   th: {
-    nav: { about: 'เกี่ยวกับเรา', services: 'บริการ', technology: 'เทคโนโลยี', contact: 'ติดต่อ', erp: 'เข้าสู่ระบบ ERP →' },
+    nav: {
+      about: '????????????',
+      services: '??????',
+      products: '????????????',
+      technology: '?????????',
+      contact: '??????',
+      admin: 'Admin',
+      register: '?????????????????????????',
+      signIn: '??????????????????????',
+    },
     hero: {
-      tag: 'พลังงานอัจฉริยะ · IoT · ERP องค์กร',
-      title1: 'พลังงานอัจฉริยะ',
-      title2: 'เพื่ออนาคต',
-      title3: 'ที่ยั่งยืน',
-      sub: 'GE Energy Tech คือทีม Startup ด้านเทคโนโลยีพลังงาน ที่พัฒนาอุปกรณ์ IoT พร้อมจำหน่ายและบริการแพลตฟอร์มมอนิเตอร์ริ่ง วิเคราะห์พลังงานด้วย AI เพื่อยกระดับธุรกิจและสิ่งแวดล้อม',
-      cta1: 'ดูบริการทั้งหมด',
-      cta2: 'ติดต่อเรา',
-      stats: ['อุปกรณ์ที่มอนิเตอร์', 'ลูกค้าองค์กร', 'การันตี uptime', 'ประเทศที่ให้บริการ'],
+      tag: '??????????????? ? IoT ? ??????????????',
+      title1: '???????????????',
+      title2: '??????????',
+      title3: '??????????',
+      sub: 'GE Energy Tech ?????? Startup ???????????????????? ??????????????? IoT ??????????????????????????????????????????? ???????????????????? AI ????????????????????????????????',
+      cta1: '???????????????',
+      cta2: '?????????',
+      stats: ['???????????????????', '????????????', '??????? uptime', '??????????????????'],
     },
     about: {
-      badge: 'เกี่ยวกับบริษัท',
-      title: 'บริษัท จีอี เอเนอร์จี่ เทค จำกัด',
-      p1: 'เราเป็น Startup ที่มุ่งสร้างนวัตกรรมเทคโนโลยีพลังงาน โดยพัฒนาอุปกรณ์ IoT และระบบดิจิทัลสำหรับการมอนิเตอร์ริ่งพลังงานแบบเรียลไทม์ในโรงงาน อาคาร และองค์กร',
-      p2: 'เราจำหน่ายพร้อมบริการแพลตฟอร์มวิเคราะห์พลังงานด้วย AI เพื่อช่วยลดการใช้พลังงาน ลดต้นทุน ลดการปล่อยคาร์บอน และขับเคลื่อนพลังงานสีเขียวเพื่อลดโลกร้อน',
+      badge: '???????????????',
+      title: '?????? ???? ?????????? ??? ?????',
+      p1: '??????? Startup ???????????????????????????????????? ??????????????? IoT ??????????????????????????????????????????????????????????????? ????? ?????????',
+      p2: '?????????????????????????????????????????????????? AI ???????????????????????? ???????? ????????????????? ?????????????????????????????????????????',
       pillars: [
-        { icon: '🎯', title: 'วิศวกรรมแม่นยำ', desc: 'ออกแบบระบบเน้นความเสถียร เชื่อถือได้ และทำงานต่อเนื่องระยะยาว' },
-        { icon: '🤝', title: 'พาร์ทเนอร์ธุรกิจ', desc: 'ทำงานร่วมกับลูกค้าตั้งแต่การวางแผนจนถึงใช้งานจริง' },
-        { icon: '🌏', title: 'รองรับระดับภูมิภาค', desc: 'รองรับการใช้งานหลายประเทศและหลายภาษาในเอเชีย' },
-        { icon: '🔬', title: 'ขับเคลื่อนด้วย R&D', desc: 'พัฒนานวัตกรรม IoT และ AI อย่างต่อเนื่อง' },
+        { icon: '??', title: '??????????????', desc: '???????????????????????? ??????????? ????????????????????????' },
+        { icon: '??', title: '????????????????', desc: '?????????????????????????????????????????????????' },
+        { icon: '??', title: '??????????????????', desc: '????????????????????????????????????????????' },
+        { icon: '??', title: '?????????????? R&D', desc: '????????????? IoT ??? AI ??????????????' },
       ],
     },
     services: {
-      badge: 'บริการของเรา',
-      title: ['โซลูชันครบวงจร', 'สำหรับทุกธุรกิจ'],
-      sub: 'ให้บริการครบตั้งแต่พัฒนาอุปกรณ์ IoT จำหน่ายอุปกรณ์ ติดตั้งระบบ ไปจนถึงแพลตฟอร์ม AI สำหรับมอนิเตอร์และวิเคราะห์พลังงาน',
+      badge: '????????????',
+      title: ['??????????????', '???????????????'],
+      sub: '??????????????????????????????? IoT ?????????????? ??????????? ???????????????? AI ??????????????????????????????????',
+    },
+    products: {
+      badge: '????????????',
+      title: ['?????????', '???????????????'],
+      sub: '?????????????????????????????????????????????? GE Energy Tech ???????????????????????????????????????????',
+      inquiry: '????????????',
     },
     tech: {
-      badge: 'เทคโนโลยีที่ใช้',
-      title: ['สร้างด้วย', 'เทคโนโลยีชั้นนำ'],
-      sub: 'พัฒนาเทคโนโลยีใหม่ด้านพลังงานอย่างต่อเนื่อง เพื่อเพิ่มประสิทธิภาพพลังงานและรองรับเป้าหมาย Net Zero',
+      badge: '???????????????',
+      title: ['?????????', '???????????????'],
+      sub: '??????????????????????????????????????????? ????????????????????????????????????????????? Net Zero',
     },
     contact: {
-      badge: 'ติดต่อเรา',
-      title: ['พร้อมเริ่มโครงการ', 'ของคุณ?'],
-      head: 'มาคุยกันได้เลย',
-      sub: 'ทีมงานพร้อมให้คำปรึกษา ออกแบบโซลูชัน และประเมินงบประมาณให้โดยไม่มีค่าใช้จ่าย',
-      company: 'บริษัท',
-      address: 'ที่อยู่',
-      systems: 'ระบบ',
-      languages: 'ภาษา',
-      formTitle: 'ส่งข้อความถึงเรา',
-      name: 'ชื่อ – Name',
-      email: 'อีเมล – Email',
-      subject: 'หัวข้อ – Subject',
-      message: 'รายละเอียด – Message',
-      submit: 'ส่งข้อความ →',
-      placeholders: ['ชื่อของคุณ / Your name', 'email@company.com', 'สนใจบริการ / Service inquiry', 'รายละเอียดโครงการหรือคำถามของคุณ…'],
+      badge: '?????????',
+      title: ['?????????????????', '???????'],
+      head: '??????????????',
+      sub: '?????????????????????? ????????????? ???????????????????????????????????????',
+      company: '??????',
+      address: '???????',
+      systems: '????',
+      languages: '????',
+      formTitle: '????????????????',
+      name: '???? ? Name',
+      email: '????? ? Email',
+      subject: '?????? ? Subject',
+      message: '?????????? ? Message',
+      submit: '?????????? ?',
+      placeholders: ['?????????? / Your name', 'email@company.com', '?????????? / Service inquiry', '?????????????????????????????????'],
+      sending: '????????...',
+      success: '??????????????????????? ??????????????????????????',
+      error: '??????????????????? ????????????????????',
     },
-    footer: { services: 'บริการ', systems: 'ระบบ', rights: 'สงวนลิขสิทธิ์', privacy: 'ความเป็นส่วนตัว', terms: 'เงื่อนไข', portals: 'พอร์ทัลทั้งหมด' },
+    pq: {
+      badge: '???????????????????',
+      titleBefore: '?????',
+      titleEm: '??????????????',
+      titleAfter: '???????????',
+      sub: '????????????????????????? ????????????? ???????????????????????? (THD) ?????????????????????????? (EMS) ???????????????????????????????????',
+      items: [
+        { icon: '??', title: '?????????????????????????', desc: '??????????????????????????????????????? ???????????????? ???????????????????????????????????????????????????????', tags: ['Voltage Regulator', 'AVR', '?????????????'], color: '#f59e0b' },
+        { icon: '??', title: '??????????????????', desc: '?????????????????????????????? (Hz) ?????????????? ????????????????????????????????????????????????????????????', tags: ['Frequency', 'Hz Stability', '???????'], color: '#0ea5e9' },
+        { icon: '??', title: '???????????????????????? (THD)', desc: '???????????????????????????????????????????? ???????????????????? ?????????????? ??????????????????', tags: ['THD', '????????? Filter', 'Power Quality'], color: '#e53935' },
+        { icon: '??', title: '??????????????????????? (EMS)', desc: '??????????????????????????????? ????????? ???????????????????????????????????????????? ???? Dashboard ??? AI Insight ????????????', tags: ['EMS', 'Energy Management', 'AI Dashboard'], color: '#7c3aed' },
+      ],
+    },
+    footer: { services: '??????', systems: '????', rights: '?????????????', privacy: '???????????????', terms: '????????', portals: '??????????????' },
   },
   en: {
-    nav: { about: 'About', services: 'Services', technology: 'Technology', contact: 'Contact', erp: 'ERP Login →' },
+    nav: {
+      about: 'About',
+      services: 'Services',
+      products: 'Our Products',
+      technology: 'Technology',
+      contact: 'Contact',
+      admin: 'Admin',
+      register: 'Register for Platform',
+      signIn: 'Sign In to Platform',
+    },
     hero: {
-      tag: 'Smart Energy · IoT · Enterprise ERP',
+      tag: 'Smart Energy ? IoT ? Green Innovation',
       title1: 'Smart Energy',
       title2: 'for a',
       title3: 'Sustainable Future',
@@ -88,16 +143,22 @@ const TRANSLATIONS = {
       p1: 'We are a startup focused on next-generation energy technology, building IoT hardware and digital platforms for real-time energy monitoring across industrial and commercial operations.',
       p2: 'We provide device sales with full service and AI-driven energy analytics to reduce energy waste, lower carbon emissions, accelerate green energy adoption, and help tackle global warming.',
       pillars: [
-        { icon: '🎯', title: 'Precision Engineering', desc: 'Built for reliability, stability, and long-term performance.' },
-        { icon: '🤝', title: 'Trusted Partnership', desc: 'We collaborate from planning through deployment and support.' },
-        { icon: '🌏', title: 'Regional Scale', desc: 'Designed for multi-country and multilingual operations in Asia.' },
-        { icon: '🔬', title: 'R&D Driven', desc: 'Continuous innovation in IoT, AI, and energy technology.' },
+        { icon: '??', title: 'Precision Engineering', desc: 'Built for reliability, stability, and long-term performance.' },
+        { icon: '??', title: 'Trusted Partnership', desc: 'We collaborate from planning through deployment and support.' },
+        { icon: '??', title: 'Regional Scale', desc: 'Designed for multi-country and multilingual operations in Asia.' },
+        { icon: '??', title: 'R&D Driven', desc: 'Continuous innovation in IoT, AI, and energy technology.' },
       ],
     },
     services: {
       badge: 'Our Services',
       title: ['Integrated Solutions', 'for Every Business'],
       sub: 'End-to-end services from IoT device development and deployment to AI energy monitoring and analytics platforms.',
+    },
+    products: {
+      badge: 'Our Products',
+      title: ['Innovation', 'Energy Products'],
+      sub: 'Devices and systems designed and built by GE Energy Tech engineers for maximum energy efficiency.',
+      inquiry: 'Product Inquiry',
     },
     tech: {
       badge: 'Technology Stack',
@@ -109,11 +170,33 @@ const TRANSLATIONS = {
       title: ['Ready to Start', 'Your Project?'],
       head: 'Let us talk',
       sub: 'Our team is ready to consult, design, and estimate your project with no upfront fee.',
-      company: 'Company', address: 'Address', systems: 'Systems', languages: 'Languages',
+      company: 'Company',
+      address: 'Address',
+      systems: 'Systems',
+      languages: 'Languages',
       formTitle: 'Send us a message',
-      name: 'Name', email: 'Email', subject: 'Subject', message: 'Message',
-      submit: 'Send Message →',
+      name: 'Name',
+      email: 'Email',
+      subject: 'Subject',
+      message: 'Message',
+      submit: 'Send Message ?',
       placeholders: ['Your name', 'email@company.com', 'Service inquiry', 'Tell us about your project...'],
+      sending: 'Sending...',
+      success: 'Message sent successfully. Our team will reply by email.',
+      error: 'Unable to send message. Please try again.',
+    },
+    pq: {
+      badge: 'Power Quality Innovation',
+      titleBefore: 'Developing',
+      titleEm: 'Smart Power',
+      titleAfter: 'Quality Devices',
+      sub: 'Innovation in voltage regulation, frequency control, THD correction, and enterprise EMS for maximum stability and efficiency.',
+      items: [
+        { icon: '??', title: 'Smart Voltage Regulator', desc: 'Automatic voltage regulation devices for fluctuating loads, protecting equipment from over/under voltage conditions.', tags: ['Voltage Regulator', 'AVR', 'Stabilization'], color: '#f59e0b' },
+        { icon: '??', title: 'Frequency Control System', desc: 'Systems to maintain and stabilize electrical frequency (Hz), ensuring reliable operation of motors and sensitive electronics.', tags: ['Frequency', 'Hz Stability', 'Motor Control'], color: '#0ea5e9' },
+        { icon: '??', title: 'Harmonic Distortion (THD) Correction', desc: 'Active and passive harmonic filtering to reduce THD, minimize energy losses, prevent overheating, and protect electrical infrastructure.', tags: ['THD', 'Harmonic Filter', 'Power Quality'], color: '#e53935' },
+        { icon: '??', title: 'Energy Management System (EMS)', desc: 'End-to-end digital platform for analyzing, monitoring, and managing enterprise energy usage with real-time dashboards and AI-driven insights.', tags: ['EMS', 'Energy Management', 'AI Dashboard'], color: '#7c3aed' },
+      ],
     },
     footer: { services: 'Services', systems: 'Systems', rights: 'All rights reserved.', privacy: 'Privacy', terms: 'Terms', portals: 'Portals' },
   },
@@ -126,93 +209,276 @@ for (const code of CLONED_LANGS) {
     ...TRANSLATIONS.en,
     nav: { ...TRANSLATIONS.en.nav },
     hero: { ...TRANSLATIONS.en.hero },
-    about: { ...TRANSLATIONS.en.about, pillars: [...TRANSLATIONS.en.about.pillars] },
+    about: {
+      ...TRANSLATIONS.en.about,
+      pillars: [...TRANSLATIONS.en.about.pillars],
+    },
     services: { ...TRANSLATIONS.en.services },
+    products: { ...TRANSLATIONS.en.products },
+    pq: { ...TRANSLATIONS.en.pq, items: [...TRANSLATIONS.en.pq.items] },
     tech: { ...TRANSLATIONS.en.tech },
     contact: { ...TRANSLATIONS.en.contact },
     footer: { ...TRANSLATIONS.en.footer },
   };
 }
 
-const OVERRIDES = {
-  zh: { nav: { about: '关于我们', services: '服务', technology: '技术', contact: '联系', erp: 'ERP 登录 →' }, hero: { tag: '智慧能源 · IoT · 企业 ERP', title1: '智慧能源', title2: '迈向', title3: '可持续未来', cta1: '查看服务', cta2: '联系我们', stats: ['监控设备', '企业客户', '可用性保障', '服务国家'] }, services: { badge: '我们的服务', title: ['一体化解决方案', '适用于各类企业'] }, tech: { badge: '技术栈', title: ['采用', '领先技术'] }, contact: { badge: '联系', title: ['准备开始', '您的项目？'], head: '欢迎和我们交流', submit: '发送消息 →' }, footer: { services: '服务', systems: '系统', rights: '版权所有。', privacy: '隐私', terms: '条款', portals: '门户' } },
-  vi: { nav: { about: 'Giới thiệu', services: 'Dịch vụ', technology: 'Công nghệ', contact: 'Liên hệ', erp: 'Đăng nhập ERP →' }, hero: { tag: 'Năng lượng thông minh · IoT · ERP doanh nghiệp', title1: 'Năng lượng thông minh', title2: 'cho một', title3: 'tương lai bền vững', cta1: 'Xem dịch vụ', cta2: 'Liên hệ', stats: ['Thiết bị giám sát', 'Khách hàng doanh nghiệp', 'Cam kết uptime', 'Quốc gia phục vụ'] }, services: { badge: 'Dịch vụ của chúng tôi', title: ['Giải pháp tích hợp', 'cho mọi doanh nghiệp'] }, tech: { badge: 'Công nghệ sử dụng', title: ['Xây dựng bằng', 'công nghệ hàng đầu'] }, contact: { badge: 'Liên hệ', title: ['Sẵn sàng bắt đầu', 'dự án của bạn?'], head: 'Hãy trao đổi với chúng tôi', submit: 'Gửi tin nhắn →' }, footer: { services: 'Dịch vụ', systems: 'Hệ thống', rights: 'Mọi quyền được bảo lưu.', privacy: 'Quyền riêng tư', terms: 'Điều khoản', portals: 'Cổng hệ thống' } },
-  ko: { nav: { about: '회사 소개', services: '서비스', technology: '기술', contact: '문의', erp: 'ERP 로그인 →' }, hero: { tag: '스마트 에너지 · IoT · 엔터프라이즈 ERP', title1: '스마트 에너지', title2: '지속가능한', title3: '미래를 위해', cta1: '서비스 보기', cta2: '문의하기', stats: ['모니터링 장치', '기업 고객', '가동률 보장', '서비스 국가'] }, services: { badge: '서비스', title: ['통합 솔루션', '모든 비즈니스를 위해'] }, tech: { badge: '기술 스택', title: ['최신', '핵심 기술로 구축'] }, contact: { badge: '문의', title: ['프로젝트를', '시작할 준비가 되셨나요?'], head: '지금 상담해 보세요', submit: '메시지 보내기 →' }, footer: { services: '서비스', systems: '시스템', rights: '모든 권리 보유.', privacy: '개인정보', terms: '이용약관', portals: '포털' } },
-  ja: { nav: { about: '会社情報', services: 'サービス', technology: '技術', contact: 'お問い合わせ', erp: 'ERP ログイン →' }, hero: { tag: 'スマートエネルギー · IoT · 企業ERP', title1: 'スマートエネルギー', title2: '持続可能な', title3: '未来へ', cta1: 'サービスを見る', cta2: 'お問い合わせ', stats: ['監視デバイス', '法人顧客', '稼働率保証', '提供国'] }, services: { badge: 'サービス', title: ['統合ソリューション', 'あらゆる企業向け'] }, tech: { badge: '技術スタック', title: ['先進', 'テクノロジーで構築'] }, contact: { badge: 'お問い合わせ', title: ['プロジェクトを', '始めませんか？'], head: 'まずはご相談ください', submit: '送信する →' }, footer: { services: 'サービス', systems: 'システム', rights: '無断転載禁止。', privacy: 'プライバシー', terms: '利用規約', portals: 'ポータル' } },
-  'zh-tw': { nav: { about: '關於我們', services: '服務', technology: '技術', contact: '聯絡', erp: 'ERP 登入 →' }, hero: { tag: '智慧能源 · IoT · 企業 ERP', title1: '智慧能源', title2: '迁向', title3: '永續未來', cta1: '查看服務', cta2: '聯絡我們', stats: ['監控設備', '企業客戶', '可用性保證', '服務國家'] }, services: { badge: '我們的服務', title: ['整合解決方案', '適用各類企業'] }, tech: { badge: '技術架構', title: ['採用', '領先技術'] }, contact: { badge: '聯絡', title: ['準備開始', '您的專案？'], head: '歡迎與我們洽談', submit: '送出訊息 →' }, footer: { services: '服務', systems: '系統', rights: '版權所有。', privacy: '隱私', terms: '條款', portals: '入口' } },
-  ms: { nav: { about: 'Tentang', services: 'Perkhidmatan', technology: 'Teknologi', contact: 'Hubungi', erp: 'Log Masuk ERP →' }, hero: { tag: 'Tenaga Pintar · IoT · ERP Perusahaan', title1: 'Tenaga Pintar', title2: 'untuk masa depan', title3: 'yang mampan', cta1: 'Lihat Perkhidmatan', cta2: 'Hubungi Kami', stats: ['Peranti Dipantau', 'Pelanggan Korporat', 'Jaminan Uptime', 'Negara Dilayan'] }, services: { badge: 'Perkhidmatan Kami', title: ['Penyelesaian Bersepadu', 'untuk setiap perniagaan'] }, tech: { badge: 'Teknologi', title: ['Dibina dengan', 'teknologi terkemuka'] }, contact: { badge: 'Hubungi', title: ['Bersedia mulakan', 'projek anda?'], head: 'Mari berbincang', submit: 'Hantar Mesej →' }, footer: { services: 'Perkhidmatan', systems: 'Sistem', rights: 'Hak cipta terpelihara.', privacy: 'Privasi', terms: 'Terma', portals: 'Portal' } },
+const LANGUAGE_OVERRIDES = {
+  zh: {
+    nav: { about: '????', services: '??', products: '?????', technology: '??', contact: '??', admin: 'Admin', register: '??????', signIn: '????' },
+    hero: { tag: '???? ? IoT ? ????', title1: '????', title2: '??', title3: '?????', cta1: '????', cta2: '????', stats: ['????', '????', '?????', '????'] },
+    services: { badge: '?????', title: ['???????', '???????'], sub: '???????????AI????????????????' },
+    products: { badge: '?????', title: ['??', '????'], sub: '?GE Energy Tech???????????????????????', inquiry: '????' },
+    tech: { badge: '???', title: ['??', '????'], sub: '??????????????????????' },
+    contact: { badge: '??', title: ['????', '?????'], head: '????', sub: '???????????????????????', submit: '???? ?', sending: '???...', success: '????????????????', error: '?????????' },
+    footer: { services: '??', systems: '??', rights: '?????', privacy: '??', terms: '??', portals: '??' },
+  },
+  vi: {
+    nav: { about: 'Gi?i thi?u', services: 'D?ch v?', products: 'S?n ph?m', technology: 'C?ng ngh?', contact: 'Li?n h?', admin: 'Admin', register: '??ng k? n?n t?ng', signIn: '??ng nh?p n?n t?ng' },
+    hero: { tag: 'N?ng l??ng th?ng minh ? IoT ? ??i m?i xanh', title1: 'N?ng l??ng th?ng minh', title2: 'cho m?t', title3: 't??ng lai b?n v?ng', cta1: 'Xem d?ch v?', cta2: 'Li?n h?', stats: ['Thi?t b? gi?m s?t', 'Kh?ch h?ng doanh nghi?p', 'Cam k?t uptime', 'Qu?c gia ph?c v?'] },
+    services: { badge: 'D?ch v? c?a ch?ng t?i', title: ['Gi?i ph?p t?ch h?p', 'cho m?i doanh nghi?p'], sub: 'D?ch v? tr?n g?i t? ph?t tri?n thi?t b? IoT ??n n?n t?ng gi?m s?t v? ph?n t?ch n?ng l??ng b?ng AI.' },
+    products: { badge: 'S?n ph?m', title: ['??i m?i', 'S?n ph?m n?ng l??ng'], sub: 'Thi?t b? v? h? th?ng do k? s? GE Energy Tech thi?t k? ?? t?i ?u hi?u qu? n?ng l??ng.', inquiry: 'H?i v? s?n ph?m' },
+    tech: { badge: 'C?ng ngh? s? d?ng', title: ['X?y d?ng b?ng', 'c?ng ngh? h?ng ??u'], sub: '??i m?i li?n t?c v? c?ng ngh? n?ng l??ng m?i h? tr? chuy?n ??i xanh v? Net Zero.' },
+    contact: { badge: 'Li?n h?', title: ['S?n s?ng b?t ??u', 'd? ?n c?a b?n?'], head: 'H?y trao ??i v?i ch?ng t?i', sub: '??i ng? s?n s?ng t? v?n, thi?t k? v? b?o gi? mi?n ph?.', submit: 'G?i tin nh?n ?', sending: '?ang g?i...', success: '?? g?i tin nh?n. Ch?ng t?i s? ph?n h?i qua email.', error: 'G?i th?t b?i. Vui l?ng th? l?i.' },
+    footer: { services: 'D?ch v?', systems: 'H? th?ng', rights: 'M?i quy?n ???c b?o l?u.', privacy: 'Quy?n ri?ng t?', terms: '?i?u kho?n', portals: 'C?ng h? th?ng' },
+  },
+  ko: {
+    nav: { about: '?? ??', services: '???', products: '?? ??', technology: '??', contact: '??', admin: 'Admin', register: '??? ??', signIn: '??? ???' },
+    hero: { tag: '??? ??? ? IoT ? ?? ??', title1: '??? ???', title2: '?????', title3: '??? ??', cta1: '??? ??', cta2: '????', stats: ['???? ??', '?? ??', '??? ??', '??? ??'] },
+    services: { badge: '???', title: ['?? ???', '?? ????? ??'], sub: 'IoT ?? ??????? AI ??? ??????? ????? ????? ???? ?????.' },
+    products: { badge: '?? ??', title: ['??', '??? ??'], sub: 'GE Energy Tech ????? ??? ?? ??? ??? ?? ? ???.', inquiry: '?? ??' },
+    tech: { badge: '?? ??', title: ['??', '?? ??? ??'], sub: '?? ??? ??? ??? ???? ???? ?? ??? ?????.' },
+    contact: { badge: '??', title: ['?????', '??? ??? ?????'], head: '?? ??? ???', sub: '?? ??, ??? ??, ?? ??? ?????.', submit: '??? ??? ?', sending: '?? ?...', success: '???? ???????. ???? ????????.', error: '??? ??????. ?? ??? ???.' },
+    footer: { services: '???', systems: '???', rights: '?? ?? ??.', privacy: '????', terms: '????', portals: '??' },
+  },
+  ja: {
+    nav: { about: '????', services: '????', products: '????', technology: '??', contact: '??????', admin: 'Admin', register: '??????????', signIn: '????????????' },
+    hero: { tag: '????????? ? IoT ? ??????', title1: '?????????', title2: '?????', title3: '???', cta1: '???????', cta2: '??????', stats: ['??????', '????', '?????', '???'] },
+    services: { badge: '????', title: ['?????????', '????????'], sub: 'IoT??????????AI??????????????????????????????' },
+    products: { badge: '????', title: ['????', '???????'], sub: 'GE Energy Tech??????????????????????????', inquiry: '???????????' },
+    tech: { badge: '??????', title: ['??', '?????????'], sub: '???????????????????????????????????' },
+    contact: { badge: '??????', title: ['???????', '???????'], head: '??????????', sub: '??????????????????????????', submit: '???? ?', sending: '???...', success: '????????????????????????', error: '??????????????????????' },
+    footer: { services: '????', systems: '????', rights: '???????', privacy: '??????', terms: '????', portals: '????' },
+  },
+  'zh-tw': {
+    nav: { about: '????', services: '??', products: '?????', technology: '??', contact: '??', admin: 'Admin', register: '??????', signIn: '????' },
+    hero: { tag: '???? ? IoT ? ????', title1: '????', title2: '??', title3: '????', cta1: '????', cta2: '????', stats: ['????', '????', '?????', '????'] },
+    services: { badge: '?????', title: ['??????', '??????'], sub: '??????????? AI ????????????????' },
+    products: { badge: '?????', title: ['??', '????'], sub: '?GE Energy Tech???????????????????????', inquiry: '????' },
+    tech: { badge: '????', title: ['??', '????'], sub: '??????????????????????' },
+    contact: { badge: '??', title: ['????', '?????'], head: '???????', sub: '????????????????????', submit: '???? ?', sending: '???...', success: '?????????????????', error: '???????????' },
+    footer: { services: '??', systems: '??', rights: '?????', privacy: '??', terms: '??', portals: '??' },
+  },
+  ms: {
+    nav: { about: 'Tentang', services: 'Perkhidmatan', products: 'Produk Kami', technology: 'Teknologi', contact: 'Hubungi', admin: 'Admin', register: 'Daftar Platform', signIn: 'Log Masuk Platform' },
+    hero: { tag: 'Tenaga Pintar ? IoT ? Inovasi Hijau', title1: 'Tenaga Pintar', title2: 'untuk masa depan', title3: 'yang mampan', cta1: 'Lihat Perkhidmatan', cta2: 'Hubungi Kami', stats: ['Peranti Dipantau', 'Pelanggan Korporat', 'Jaminan Uptime', 'Negara Dilayan'] },
+    services: { badge: 'Perkhidmatan Kami', title: ['Penyelesaian Bersepadu', 'untuk setiap perniagaan'], sub: 'Perkhidmatan hujung ke hujung dari pembangunan peranti IoT hingga platform pemantauan dan analitik tenaga AI.' },
+    products: { badge: 'Produk Kami', title: ['Inovasi', 'Produk Tenaga'], sub: 'Peranti dan sistem yang direka oleh jurutera GE Energy Tech untuk kecekapan tenaga maksimum.', inquiry: 'Pertanyaan Produk' },
+    tech: { badge: 'Teknologi', title: ['Dibina dengan', 'teknologi terkemuka'], sub: 'Inovasi berterusan dalam teknologi tenaga baharu untuk sokongan peralihan hijau dan Net Zero.' },
+    contact: { badge: 'Hubungi', title: ['Bersedia mulakan', 'projek anda?'], head: 'Mari berbincang', sub: 'Pasukan kami sedia berunding, mereka bentuk penyelesaian dan anggaran tanpa bayaran awal.', submit: 'Hantar Mesej ?', sending: 'Menghantar...', success: 'Mesej dihantar. Kami akan membalas melalui e-mel.', error: 'Gagal menghantar. Sila cuba lagi.' },
+    footer: { services: 'Perkhidmatan', systems: 'Sistem', rights: 'Hak cipta terpelihara.', privacy: 'Privasi', terms: 'Terma', portals: 'Portal' },
+  },
 };
 
-for (const [code, ov] of Object.entries(OVERRIDES)) {
+for (const [code, override] of Object.entries(LANGUAGE_OVERRIDES)) {
   const base = TRANSLATIONS[code];
   if (!base) continue;
-  TRANSLATIONS[code] = { ...base, ...ov, nav: { ...base.nav, ...(ov.nav||{}) }, hero: { ...base.hero, ...(ov.hero||{}) }, about: { ...base.about, ...(ov.about||{}) }, services: { ...base.services, ...(ov.services||{}) }, tech: { ...base.tech, ...(ov.tech||{}) }, contact: { ...base.contact, ...(ov.contact||{}) }, footer: { ...base.footer, ...(ov.footer||{}) } };
+  TRANSLATIONS[code] = {
+    ...base,
+    ...override,
+    nav: { ...base.nav, ...(override.nav || {}) },
+    hero: { ...base.hero, ...(override.hero || {}) },
+    about: { ...base.about, ...(override.about || {}) },
+    services: { ...base.services, ...(override.services || {}) },
+    products: { ...base.products, ...(override.products || {}) },
+    pq: override.pq
+      ? { ...base.pq, ...override.pq, items: override.pq.items || base.pq.items }
+      : base.pq,
+    tech: { ...base.tech, ...(override.tech || {}) },
+    contact: { ...base.contact, ...(override.contact || {}) },
+    footer: { ...base.footer, ...(override.footer || {}) },
+  };
 }
 
 const SERVICES = [
-  { icon: '🚀', title: 'Energy Technology Startup Solutions', desc: 'Rapid innovation for energy businesses, from concept validation to production rollout.', tags: ['Startup', 'MVP', 'Scale-up'], accent: 'linear-gradient(90deg,#0ea5e9,#1565c0)', iconBg: 'rgba(14,165,233,0.16)' },
-  { icon: '🧩', title: 'IoT Device Development & Sales', desc: 'Design, engineering, and delivery of IoT energy devices with installation and after-sales service.', tags: ['IoT Devices', 'Hardware', 'Service'], accent: 'linear-gradient(90deg,#1565c0,#0097a7)', iconBg: 'rgba(21,101,192,0.15)' },
-  { icon: '⚡', title: 'Voltage & Frequency Regulator Innovation', desc: 'Smart devices for voltage stabilization, frequency control, and harmonic distortion (THD) correction.', tags: ['Voltage Regulator', 'Frequency', 'THD'], accent: 'linear-gradient(90deg,#f59e0b,#ea580c)', iconBg: 'rgba(245,158,11,0.14)' },
-  { icon: '📡', title: 'Monitoring Platform as a Service', desc: 'Cloud platform for real-time energy monitoring, alerts, and dashboards in one place.', tags: ['Monitoring', 'Cloud Platform', 'Real-time'], accent: 'linear-gradient(90deg,#0097a7,#26c6da)', iconBg: 'rgba(0,151,167,0.15)' },
-  { icon: '🤖', title: 'AI Energy Analytics & Management', desc: 'AI-powered EMS for consumption patterns, power quality, demand forecasting, and optimization.', tags: ['AI', 'EMS', 'Power Quality', 'Forecasting'], accent: 'linear-gradient(90deg,#6a1b9a,#9c27b0)', iconBg: 'rgba(106,27,154,0.15)' },
-  { icon: '🌱', title: 'Green Energy & Carbon Reduction', desc: 'Innovation for green energy transition, carbon reduction, and measurable climate impact.', tags: ['Green Energy', 'Carbon', 'ESG'], accent: 'linear-gradient(90deg,#2e7d32,#43a047)', iconBg: 'rgba(46,125,50,0.15)' },
-  { icon: '🔬', title: 'Next-Gen Energy Innovation Lab', desc: 'R&D for new energy technologies and advanced digital solutions for sustainability.', tags: ['R&D', 'Innovation', 'New Tech'], accent: 'linear-gradient(90deg,#059669,#0891b2)', iconBg: 'rgba(5,150,105,0.14)' },
+  { icon: '??', title: { th: '??????? Startup ????????????????', en: 'Energy Technology Startup Solutions' }, desc: { th: '??????????????????????????????? ???????????????????????????????????', en: 'Startup-style rapid innovation for energy businesses, from concept validation to production rollout.' }, tags: ['Startup', 'MVP', 'Scale-up'], accent: 'linear-gradient(90deg, #0ea5e9, #1565c0)', iconBg: 'rgba(14,165,233,0.16)' },
+  { icon: '??', title: { th: '?????????????????????? IoT', en: 'IoT Device Development & Sales' }, desc: { th: '?????? ???? ????????????????? IoT ?????????????????????', en: 'Design, engineering, and commercial delivery of IoT energy devices with installation and after-sales service.' }, tags: ['IoT Devices', 'Hardware', 'Service'], accent: 'linear-gradient(90deg, #1565c0, #0097a7)', iconBg: 'rgba(21,101,192,0.15)' },
+  { icon: '?', title: { th: '????????????????????????????', en: 'Voltage & Frequency Regulator Innovation' }, desc: { th: '?????????????????????? ????????????? ???????? THD ??????????????????????????????', en: 'Development of smart devices for voltage stabilization, frequency control, and harmonic distortion (THD) correction to ensure power quality and equipment safety.' }, tags: ['Voltage Regulator', 'Frequency', 'THD / Harmonics'], accent: 'linear-gradient(90deg, #f59e0b, #ea580c)', iconBg: 'rgba(245,158,11,0.14)' },
+  { icon: '??', title: { th: '?????????????????????? (PaaS)', en: 'Monitoring Platform as a Service' }, desc: { th: '??????????????????????????????????????????? ????????? ????????????????????????', en: 'Cloud platform for real-time energy monitoring, alerts, dashboards, and operational control in one place.' }, tags: ['Monitoring', 'Cloud Platform', 'Real-time'], accent: 'linear-gradient(90deg, #0097a7, #26c6da)', iconBg: 'rgba(0,151,167,0.15)' },
+  { icon: '??', title: { th: '????????????????????????????? AI', en: 'AI Energy Analytics & Management' }, desc: { th: '???? EMS ???? AI ?????????????????????? ??????????? ??????????????????????', en: 'AI-powered energy management system (EMS) for analyzing consumption patterns, power quality, demand forecasting, and delivering actionable optimization strategies.' }, tags: ['AI', 'EMS', 'Power Quality', 'Forecasting'], accent: 'linear-gradient(90deg, #6a1b9a, #9c27b0)', iconBg: 'rgba(106,27,154,0.15)' },
+  { icon: '??', title: { th: '??????????????????????????', en: 'Green Energy & Carbon Reduction' }, desc: { th: '???????????????????????????????????????????? ????????? ??????????????????????????', en: 'Innovation programs for green energy transition, carbon reduction, and measurable climate impact.' }, tags: ['Green Energy', 'Carbon', 'ESG'], accent: 'linear-gradient(90deg, #2e7d32, #43a047)', iconBg: 'rgba(46,125,50,0.15)' },
+  { icon: '??', title: { th: '?????????????????????????????', en: 'Next-Gen Energy Innovation Lab' }, desc: { th: '??????????????????????????????????????????????????????????????????????????????', en: 'R&D for new energy technologies and advanced digital solutions to improve sustainability and competitiveness.' }, tags: ['R&D', 'Innovation', 'New Tech'], accent: 'linear-gradient(90deg, #059669, #0891b2)', iconBg: 'rgba(5,150,105,0.14)' },
 ];
 
 const TECH = [
-  { icon: '⚙️', name: 'Next.js', desc: 'Full-stack React framework for production applications.' },
-  { icon: '🗄️', name: 'MySQL / Prisma', desc: 'Relational data platform with schema governance.' },
-  { icon: '📦', name: 'MQTT Broker', desc: 'Real-time telemetry and event streaming for IoT devices.' },
-  { icon: '🤖', name: 'AI Insights Engine', desc: 'Automated monitoring and insight generation.' },
-  { icon: '🐳', name: 'Docker & CI/CD', desc: 'Containerized pipelines with repeatable deployments.' },
-  { icon: '📱', name: 'Responsive Web App', desc: 'Optimized for desktop, tablet, and mobile.' },
-  { icon: '🔐', name: 'JWT / RBAC Auth', desc: 'Token authentication with role-based permissions.' },
-  { icon: '☁️', name: 'Cloud Infrastructure', desc: 'Scalable and resilient enterprise architecture.' },
+  { icon: '??', name: { th: 'Next.js 15', en: 'Next.js 15' }, desc: { th: '?????????? React ?????????????????????? production', en: 'Full-stack React framework for production-grade applications.' } },
+  { icon: '???', name: { th: 'MySQL / Prisma', en: 'MySQL / Prisma' }, desc: { th: '?????????????????????????? migration ??? schema', en: 'Relational data platform with migrations and schema governance.' } },
+  { icon: '??', name: { th: 'MQTT Broker', en: 'MQTT Broker' }, desc: { th: '???????????? IoT ???????????????????????', en: 'Reliable real-time telemetry and event streaming for IoT devices.' } },
+  { icon: '??', name: { th: 'AI Insights Engine', en: 'AI Insights Engine' }, desc: { th: '????????????????? insight ????????????????????????????', en: 'Automated monitoring and insight generation from operational data.' } },
+  { icon: '??', name: { th: 'Docker & CI/CD', en: 'Docker & CI/CD' }, desc: { th: 'Pipeline ??? container ?????? deploy ???????????', en: 'Containerized release pipelines with repeatable deployments.' } },
+  { icon: '??', name: { th: 'Responsive Web App', en: 'Responsive Web App' }, desc: { th: '??????????????? ???????? ?????????', en: 'Optimized interface for desktop, tablet, and mobile.' } },
+  { icon: '??', name: { th: 'JWT / RBAC Auth', en: 'JWT / RBAC Auth' }, desc: { th: '??????????????? token ?????????????????', en: 'Token authentication with granular role-based permissions.' } },
+  { icon: '??', name: { th: 'Cloud Infrastructure', en: 'Cloud Infrastructure' }, desc: { th: '????????????????????????????????????', en: 'Scalable and resilient architecture for enterprise reliability.' } },
 ];
 
-const PQ_ITEMS = (lang) => [
-  { icon: '🔋', title: lang === 'th' ? 'เครื่องปรับแรงดันอัจฉริยะ' : 'Smart Voltage Regulator', desc: lang === 'th' ? 'พัฒนาอุปกรณ์ปรับแรงดันไฟฟ้าแบบอัตโนมัติ ปกป้องเครื่องจากแรงดันสูงหรือต่ำเกินกำหนด' : 'Automatic voltage regulation protecting equipment from over/under voltage conditions.', tags: ['Voltage Regulator', 'AVR', 'Stabilization'], color: '#f59e0b' },
-  { icon: '〰️', title: lang === 'th' ? 'ควบคุมความถี่ไฟฟ้า' : 'Frequency Control System', desc: lang === 'th' ? 'ระบบควบคุมความถี่ไฟฟ้า (Hz) เพื่อมอเตอร์และระบบอิเล็กทรอนิกส์' : 'Maintaining electrical frequency (Hz) stability for motors and sensitive electronics.', tags: ['Frequency', 'Hz Stability', 'Motor Control'], color: '#0ea5e9' },
-  { icon: '📉', title: lang === 'th' ? 'แก้ไขความเพี้ยนฮาร์มอนิก (THD)' : 'Harmonic Distortion (THD) Correction', desc: lang === 'th' ? 'เทคโนโลยีกรองความเพี้ยนฮาร์มอนิก ลดความสูญเสียพลังงานและปกป้องระบบไฟฟ้า' : 'Active harmonic filtering to reduce THD, minimize energy losses, and protect electrical systems.', tags: ['THD', 'Harmonic Filter', 'Power Quality'], color: '#e53935' },
-  { icon: '📊', title: lang === 'th' ? 'ระบบบริหารจัดการพลังงาน (EMS)' : 'Energy Management System (EMS)', desc: lang === 'th' ? 'แพลตฟอร์มวิเคราะห์ มอนิเตอร์์ และบริหารจัดการพลังงานด้วย AI Dashboard แบบเรียลไทม์' : 'End-to-end platform for monitoring, analyzing, and managing enterprise energy with real-time AI dashboards.', tags: ['EMS', 'Energy Management', 'AI Dashboard'], color: '#7c3aed' },
+const PRODUCTS = [
+  {
+    icon: '?',
+    category: { th: '?????????????????', en: 'Voltage Regulator' },
+    name: { th: 'Smart AVR Series', en: 'Smart AVR Series' },
+    desc: { th: '??????????????????????????????????????? ???????????????????? ?????????????????????? ?????????? 1?200 kVA', en: 'Intelligent automatic voltage regulator for stable voltage control, surge/sag protection, rated 1?200 kVA.' },
+    specs: ['1?200 kVA', 'Response < 20ms', '?1% accuracy'],
+    color: '#f59e0b',
+    badge: { th: '?????', en: 'Best Seller' },
+  },
+  {
+    icon: '??',
+    category: { th: '?????????????', en: 'Frequency Controller' },
+    name: { th: 'FreqGuard Pro', en: 'FreqGuard Pro' },
+    desc: { th: '????????????????????? (Hz) ???????????????????????? ?????????? 50/60 Hz ?????????? DSP ?????????????', en: 'High-precision DSP-based frequency stabilizer for industrial and medical facilities, supporting 50/60 Hz systems.' },
+    specs: ['50 / 60 Hz', 'DSP Control', '?0.01 Hz accuracy'],
+    color: '#0ea5e9',
+    badge: null,
+  },
+  {
+    icon: '??',
+    category: { th: '?????????????', en: 'Harmonic Filter' },
+    name: { th: 'ActiveFilter THD-X', en: 'ActiveFilter THD-X' },
+    desc: { th: '??????????????????????? ?? THD ?????????? 95% ??????????????????????????????????????????????????????', en: 'Active harmonic filter reducing THD by over 95%, protecting electrical systems from overheating and equipment damage.' },
+    specs: ['THD < 5%', 'Active filtering', 'Up to 600A'],
+    color: '#e53935',
+    badge: { th: '????', en: 'New' },
+  },
+  {
+    icon: '??',
+    category: { th: '???????????????', en: 'Smart Meter' },
+    name: { th: 'GE-IoT Power Meter', en: 'GE-IoT Power Meter' },
+    desc: { th: '???????????????????? IoT ??? V/I/kW/kWh/PF/THD ???????????? ????????????? MQTT/Modbus ????????? Cloud Platform ????????', en: 'IoT-enabled power meter measuring V/I/kW/kWh/PF/THD in real time, transmitting via MQTT/Modbus to Cloud Platform.' },
+    specs: ['MQTT / Modbus', 'V ? I ? kW ? THD', 'Cloud ready'],
+    color: '#7c3aed',
+    badge: null,
+  },
+  {
+    icon: '??',
+    category: { th: '??????????????????', en: 'Green Energy System' },
+    name: { th: 'SolarEdge Monitor', en: 'SolarEdge Monitor' },
+    desc: { th: '??????????????????????????????????????????? ?????????? Carbon Credit ????????????????????????????????', en: 'Solar energy monitoring and analysis system with Carbon Credit calculation and daily panel efficiency tracking.' },
+    specs: ['Solar PV', 'Carbon Credit', 'Daily report'],
+    color: '#16a34a',
+    badge: null,
+  },
+  {
+    icon: '??',
+    category: { th: '????????? AI', en: 'AI Platform' },
+    name: { th: 'GE-EMS Cloud', en: 'GE-EMS Cloud' },
+    desc: { th: '?????????????????????????????????????? AI ???????????????????????????? ??????????????????? ???????????????????????????', en: 'AI-powered enterprise energy management platform for consumption pattern analysis, demand forecasting, and saving recommendations.' },
+    specs: ['AI Analytics', 'Demand forecast', 'Multi-site'],
+    color: '#7c3aed',
+    badge: { th: 'Cloud SaaS', en: 'Cloud SaaS' },
+  },
 ];
 
 const STATS = ['500+', '15+', '99.9%', '3'];
 
 export default function GePage() {
   const [lang, setLang] = useState('th');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [submitState, setSubmitState] = useState({
+    status: 'idle',
+    message: '',
+  });
+
   useEffect(() => {
     const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (stored && LANGUAGE_OPTIONS.some((o) => o.code === stored)) setLang(stored);
+    if (stored && LANGUAGE_OPTIONS.some((item) => item.code === stored)) {
+      setLang(stored);
+    }
   }, []);
+
   useEffect(() => {
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
     document.documentElement.lang = lang;
   }, [lang]);
+
   const t = useMemo(() => TRANSLATIONS[lang] || TRANSLATIONS[FALLBACK_LANG], [lang]);
-  const pq = PQ_ITEMS(lang);
+  const submitLabel = submitState.status === 'sending' ? t.contact.sending : t.contact.submit;
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+    setSubmitState({ status: 'sending', message: '' });
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, lang }),
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload?.error || 'Unable to send message');
+      }
+      setSubmitState({
+        status: 'success',
+        message: t.contact.success,
+      });
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      setSubmitState({
+        status: 'error',
+        message: t.contact.error,
+      });
+    }
+  };
 
   return (
     <>
       <nav className="get-nav">
         <a href="#hero" className="get-nav-brand">
-          <Image src="/ge-energyTech/138568-transparent.png" alt="GE Energy Tech" width={40} height={40} className="get-nav-logo" priority />
-          <span className="get-nav-name"><span>GE</span> ENERGY TECH</span>
+          <Image src="/ge-energyTech/138568-transparent.png" alt="GE Energy Tech logo" width={40} height={40} className="get-nav-logo" priority />
+          <span className="get-nav-name">
+            <span>GE</span> ENERGY TECH
+          </span>
         </a>
         <div className="get-nav-links">
           <a href="#about">{t.nav.about}</a>
           <a href="#services">{t.nav.services}</a>
+          <a href="#products">{t.nav.products}</a>
           <a href="#technology">{t.nav.technology}</a>
           <a href="#contact">{t.nav.contact}</a>
         </div>
-        <a href="#contact" className="get-nav-cta">{t.nav.erp}</a>
+        <div className="get-nav-actions">
+          <a href={portalHref('/admin/login')} className="get-nav-btn get-nav-btn--admin">
+            {t.nav.admin}
+          </a>
+          <a href={portalHref('/register')} className="get-nav-btn get-nav-btn--register">
+            {t.nav.register}
+          </a>
+          <a href={portalHref('/auth/select')} className="get-nav-btn get-nav-btn--signin">
+            {t.nav.signIn}
+          </a>
+        </div>
       </nav>
 
       <section className="get-lang-switch">
         <div className="get-container">
           <div className="get-lang-switch-inner">
-            {LANGUAGE_OPTIONS.map((o) => (
-              <button key={o.code} type="button" className={`get-lang-btn ${lang === o.code ? 'is-active' : ''}`} onClick={() => setLang(o.code)}>{o.label}</button>
+            {LANGUAGE_OPTIONS.map((option) => (
+              <button
+                key={option.code}
+                type="button"
+                className={`get-lang-btn ${lang === option.code ? 'is-active' : ''}`}
+                onClick={() => setLang(option.code)}
+              >
+                {option.label}
+              </button>
             ))}
           </div>
         </div>
@@ -224,15 +490,31 @@ export default function GePage() {
         <div className="get-hero-inner">
           <div className="get-hero-text">
             <p className="get-hero-tag">{t.hero.tag}</p>
-            <h1 className="get-hero-h1">{t.hero.title1}<br /><em>{t.hero.title2}</em> {t.hero.title3}</h1>
+            <h1 className="get-hero-h1">
+              {t.hero.title1}
+              <br />
+              <em>{t.hero.title2}</em> {t.hero.title3}
+            </h1>
             <p className="get-hero-sub">{t.hero.sub}</p>
             <div className="get-hero-actions">
-              <a href="#services" className="get-btn get-btn--primary">{t.hero.cta1}</a>
-              <a href="#contact" className="get-btn get-btn--ghost">{t.hero.cta2}</a>
+              <a href="#services" className="get-btn get-btn--primary">
+                {t.hero.cta1}
+              </a>
+              <a href="#contact" className="get-btn get-btn--ghost">
+                {t.hero.cta2}
+              </a>
+            </div>
+            <div className="get-hero-platform">
+              <a href={portalHref('/register')} className="get-hero-platform-btn">{t.nav.register}</a>
+              <a href={portalHref('/auth/select')} className="get-hero-platform-btn get-hero-platform-btn--primary">{t.nav.signIn}</a>
+              <a href={portalHref('/admin/login')} className="get-hero-platform-btn get-hero-platform-btn--admin">{t.nav.admin}</a>
             </div>
             <div className="get-hero-stats">
-              {STATS.map((v, i) => (
-                <div key={v} className="get-hero-stat"><strong>{v}</strong><span>{t.hero.stats[i]}</span></div>
+              {STATS.map((value, index) => (
+                <div key={value} className="get-hero-stat">
+                  <strong>{value}</strong>
+                  <span>{t.hero.stats[index]}</span>
+                </div>
               ))}
             </div>
           </div>
@@ -255,10 +537,13 @@ export default function GePage() {
               <p>{t.about.p2}</p>
             </div>
             <div className="get-about-pillars">
-              {t.about.pillars.map((p) => (
-                <div key={p.title} className="get-pillar">
-                  <span className="get-pillar-icon">{p.icon}</span>
-                  <div className="get-pillar-content"><h4>{p.title}</h4><p>{p.desc}</p></div>
+              {t.about.pillars.map((pillar) => (
+                <div key={pillar.title} className="get-pillar">
+                  <span className="get-pillar-icon">{pillar.icon}</span>
+                  <div className="get-pillar-content">
+                    <h4>{pillar.title}</h4>
+                    <p>{pillar.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -266,27 +551,26 @@ export default function GePage() {
         </div>
       </section>
 
+      {/* ?? Power Quality Innovation ????????????????????????????????????? */}
       <section className="get-section get-pq" id="innovation">
         <div className="get-container">
           <div className="get-section-head">
-            <div className="get-badge get-badge--amber">
-              {lang === 'th' ? 'นวัตกรรมคุณภาพไฟฟ้า' : lang === 'zh' || lang === 'zh-tw' ? '电能质量创新' : lang === 'ja' ? '電力品質イノベーション' : lang === 'ko' ? '전력 품질 혁신' : 'Power Quality Innovation'}
-            </div>
+            <div className="get-badge get-badge--amber">{t.pq.badge}</div>
             <h2 className="get-section-h2">
-              {lang === 'th' ? <>พัฒนา<em>อุปกรณ์และระบบ</em>คุณภาพไฟฟ้า</> : <>Developing <em>Smart Power</em> Quality Devices</>}
+              {t.pq.titleBefore} <em>{t.pq.titleEm}</em> {t.pq.titleAfter}
             </h2>
-            <p className="get-section-sub">
-              {lang === 'th' ? 'นวัตกรรมเครื่องปรับแรงดัน ควบคุมความถี่ แก้ไขความเพี้ยนฮาร์มอนิก (THD) และระบบบริหารจัดการพลังงาน (EMS) เพื่อความเสถียรสูงสุด' : 'Innovation in voltage regulation, frequency control, THD correction, and enterprise EMS for maximum stability.'}
-            </p>
+            <p className="get-section-sub">{t.pq.sub}</p>
           </div>
           <div className="get-pq-grid">
-            {pq.map((item) => (
+            {t.pq.items.map((item) => (
               <div key={item.title} className="get-pq-card" style={{ '--pq-color': item.color }}>
                 <div className="get-pq-icon">{item.icon}</div>
                 <h3>{item.title}</h3>
                 <p>{item.desc}</p>
                 <div className="get-service-tags" style={{ marginTop: 14 }}>
-                  {item.tags.map((tag) => <span key={tag} className="get-service-tag">{tag}</span>)}
+                  {item.tags.map((tag) => (
+                    <span key={tag} className="get-service-tag">{tag}</span>
+                  ))}
                 </div>
               </div>
             ))}
@@ -298,16 +582,58 @@ export default function GePage() {
         <div className="get-container">
           <div className="get-section-head">
             <div className="get-badge">{t.services.badge}</div>
-            <h2 className="get-section-h2">{t.services.title[0]}<br /><em>{t.services.title[1]}</em></h2>
+            <h2 className="get-section-h2">
+              {t.services.title[0]}
+              <br />
+              <em>{t.services.title[1]}</em>
+            </h2>
             <p className="get-section-sub">{t.services.sub}</p>
           </div>
           <div className="get-services-grid">
-            {SERVICES.map((s) => (
-              <div key={s.title} className="get-service-card" style={{ '--card-accent': s.accent }}>
-                <div className="get-service-icon" style={{ background: s.iconBg }}>{s.icon}</div>
-                <h3>{s.title}</h3>
-                <p>{s.desc}</p>
-                <div className="get-service-tags">{s.tags.map((tag) => <span key={tag} className="get-service-tag">{tag}</span>)}</div>
+            {SERVICES.map((service) => (
+              <div key={pickLang(service.title, lang)} className="get-service-card" style={{ '--card-accent': service.accent }}>
+                <div className="get-service-icon" style={{ '--icon-bg': service.iconBg, background: service.iconBg }}>
+                  {service.icon}
+                </div>
+                <h3>{pickLang(service.title, lang)}</h3>
+                <p>{pickLang(service.desc, lang)}</p>
+                <div className="get-service-tags">
+                  {service.tags.map((tag) => (
+                    <span key={tag} className="get-service-tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ?? Products ???????????????????????????????????????????????????? */}
+      <section className="get-section get-products" id="products">
+        <div className="get-container">
+          <div className="get-section-head">
+            <div className="get-badge get-badge--green">{t.products.badge}</div>
+            <h2 className="get-section-h2">
+              {t.products.title[0]} <em>{t.products.title[1]}</em>
+            </h2>
+            <p className="get-section-sub">{t.products.sub}</p>
+          </div>
+          <div className="get-products-grid">
+            {PRODUCTS.map((p) => (
+              <div key={pickLang(p.name, lang)} className="get-product-card" style={{ '--prod-color': p.color }}>
+                {p.badge && (
+                  <span className="get-product-badge">{pickLang(p.badge, lang)}</span>
+                )}
+                <div className="get-product-icon">{p.icon}</div>
+                <p className="get-product-category">{pickLang(p.category, lang)}</p>
+                <h3 className="get-product-name">{pickLang(p.name, lang)}</h3>
+                <p className="get-product-desc">{pickLang(p.desc, lang)}</p>
+                <div className="get-product-specs">
+                  {p.specs.map((s) => (
+                    <span key={s} className="get-product-spec">{s}</span>
+                  ))}
+                </div>
+                <a href="#contact" className="get-product-inquiry">{t.products.inquiry} ?</a>
               </div>
             ))}
           </div>
@@ -317,8 +643,11 @@ export default function GePage() {
       <div className="get-stats-banner">
         <div className="get-container">
           <div className="get-stats-grid">
-            {STATS.map((v, i) => (
-              <div key={v} className="get-stat-item"><strong>{v}</strong><p>{t.hero.stats[i]}</p></div>
+            {STATS.map((value, index) => (
+              <div key={value} className="get-stat-item">
+                <strong>{value}</strong>
+                <p>{t.hero.stats[index]}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -328,13 +657,17 @@ export default function GePage() {
         <div className="get-container">
           <div className="get-section-head">
             <div className="get-badge get-badge--green">{t.tech.badge}</div>
-            <h2 className="get-section-h2">{t.tech.title[0]} <em>{t.tech.title[1]}</em></h2>
+            <h2 className="get-section-h2">
+              {t.tech.title[0]} <em>{t.tech.title[1]}</em>
+            </h2>
             <p className="get-section-sub">{t.tech.sub}</p>
           </div>
           <div className="get-tech-grid">
-            {TECH.map((tech) => (
-              <div key={tech.name} className="get-tech-card">
-                <span>{tech.icon}</span><strong>{tech.name}</strong><p>{tech.desc}</p>
+            {TECH.map((techItem) => (
+              <div key={pickLang(techItem.name, lang)} className="get-tech-card">
+                <span>{techItem.icon}</span>
+                <strong>{pickLang(techItem.name, lang)}</strong>
+                <p>{pickLang(techItem.desc, lang)}</p>
               </div>
             ))}
           </div>
@@ -345,43 +678,101 @@ export default function GePage() {
         <div className="get-container">
           <div className="get-section-head">
             <div className="get-badge">{t.contact.badge}</div>
-            <h2 className="get-section-h2">{t.contact.title[0]} <em>{t.contact.title[1]}</em></h2>
+            <h2 className="get-section-h2">
+              {t.contact.title[0]} <em>{t.contact.title[1]}</em>
+            </h2>
           </div>
           <div className="get-contact-inner">
             <div className="get-contact-info">
               <h3>{t.contact.head}</h3>
               <p>{t.contact.sub}</p>
               <div className="get-contact-items">
-                {[
-                  { icon: '🏢', label: t.contact.company, value: 'GE ENERGY TECH CO., LTD.' },
-                  { icon: '📍', label: t.contact.address, value: 'Thailand' },
-                  { icon: '🌐', label: t.contact.systems, value: 'Energy Dashboard · ERP · IoT Platform' },
-                  { icon: '🌏', label: t.contact.languages, value: 'ไทย · 中文 · Tiếng Việt · English · 한국어 · 日本語 · 繁體中文 · Bahasa Melayu' },
-                ].map((item) => (
-                  <div key={item.label} className="get-contact-item">
-                    <span className="get-contact-item-icon">{item.icon}</span>
-                    <div className="get-contact-item-text"><strong>{item.label}</strong><span>{item.value}</span></div>
+                <div className="get-contact-item">
+                  <span className="get-contact-item-icon">??</span>
+                  <div className="get-contact-item-text">
+                    <strong>{t.contact.company}</strong>
+                    <span>GE ENERGY TECH CO., LTD.</span>
                   </div>
-                ))}
+                </div>
+                <div className="get-contact-item">
+                  <span className="get-contact-item-icon">??</span>
+                  <div className="get-contact-item-text">
+                    <strong>{t.contact.address}</strong>
+                    <span>Thailand -- Republic Korea</span>
+                  </div>
+                </div>
+                <div className="get-contact-item">
+                  <span className="get-contact-item-icon">??</span>
+                  <div className="get-contact-item-text">
+                    <strong>{t.contact.systems}</strong>
+                    <span>Energy Dashboard ? IoT Platform</span>
+                  </div>
+                </div>
+                <div className="get-contact-item">
+                  <span className="get-contact-item-icon">??</span>
+                  <div className="get-contact-item-text">
+                    <strong>{t.contact.languages}</strong>
+                    <span>??? ? ?? ? Ti?ng Vi?t ? English ? ??? ? ??? ? ???? ? Bahasa Melayu</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <form className="get-contact-form">
+            <form className="get-contact-form" onSubmit={handleContactSubmit}>
               <h4>{t.contact.formTitle}</h4>
-              {[
-                { label: t.contact.name, type: 'text', ph: t.contact.placeholders[0] },
-                { label: t.contact.email, type: 'email', ph: t.contact.placeholders[1] },
-                { label: t.contact.subject, type: 'text', ph: t.contact.placeholders[2] },
-              ].map((f) => (
-                <div key={f.label} className="get-form-field">
-                  <label>{f.label}</label>
-                  <input type={f.type} placeholder={f.ph} />
-                </div>
-              ))}
+              <div className="get-form-field">
+                <label>{t.contact.name}</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder={t.contact.placeholders[0]}
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="get-form-field">
+                <label>{t.contact.email}</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder={t.contact.placeholders[1]}
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="get-form-field">
+                <label>{t.contact.subject}</label>
+                <input
+                  type="text"
+                  name="subject"
+                  placeholder={t.contact.placeholders[2]}
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
               <div className="get-form-field">
                 <label>{t.contact.message}</label>
-                <textarea placeholder={t.contact.placeholders[3]} />
+                <textarea
+                  name="message"
+                  placeholder={t.contact.placeholders[3]}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-              <button type="submit" className="get-btn get-btn--primary" style={{ width: '100%', justifyContent: 'center' }}>{t.contact.submit}</button>
+              <button
+                type="submit"
+                className="get-btn get-btn--primary"
+                style={{ width: '100%', justifyContent: 'center' }}
+                disabled={submitState.status === 'sending'}
+              >
+                {submitLabel}
+              </button>
+              {submitState.message ? (
+                <p className={`get-form-status get-form-status--${submitState.status}`}>{submitState.message}</p>
+              ) : null}
             </form>
           </div>
         </div>
@@ -399,25 +790,27 @@ export default function GePage() {
               <h5>{t.footer.services}</h5>
               <ul>
                 <li><a href="#services">Energy Monitoring</a></li>
-                <li><a href="#services">IoT Devices</a></li>
-                <li><a href="#innovation">Power Quality</a></li>
-                <li><a href="#services">AI Analytics</a></li>
+                <li><a href="#services">Energy Management</a></li>
+                <li><a href="#services">IoT Infrastructure</a></li>
+                <li><a href="#services">Data Analytics</a></li>
               </ul>
             </div>
             <div className="get-footer-col">
               <h5>{t.footer.systems}</h5>
               <ul>
-                <li><a href="#about">{t.about.badge}</a></li>
-                <li><a href="#technology">{t.tech.badge}</a></li>
-                <li><a href="#contact">{t.contact.badge}</a></li>
+                <li><a href="#contact">Contact Team</a></li>
+                <li><a href="#services">Energy Dashboard</a></li>
+                <li><a href="#about">{t.footer.portals}</a></li>
+                <li><a href="#hero">Home</a></li>
               </ul>
             </div>
           </div>
           <div className="get-footer-bottom">
-            <p>� {new Date().getFullYear()} GE Energy Tech Co., Ltd. {t.footer.rights}</p>
+            <p>? {new Date().getFullYear()} GE Energy Tech Co., Ltd. {t.footer.rights}</p>
             <div className="get-footer-bottom-links">
               <a href="#about">{t.footer.privacy}</a>
               <a href="#about">{t.footer.terms}</a>
+              <a href="#about">{t.footer.portals}</a>
             </div>
           </div>
         </div>
