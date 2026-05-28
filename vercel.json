@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/shipping-tracking",
+      "destination": "https://strong-dory-enabled.ngrok-free.app/ge-energy-tech/shipping-tracking",
+      "permanent": false
+    },
+    {
+      "source": "/after-sales-chat",
+      "destination": "https://strong-dory-enabled.ngrok-free.app/ge-energy-tech/after-sales-chat",
+      "permanent": false
+    }
+  ]
+}
