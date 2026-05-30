@@ -1101,8 +1101,8 @@ export default function GePage() {
           <a href="#products">{t.nav.products}</a>
           <a href="#credibility">{t.nav.technology}</a>
           <a href="#contact">{t.nav.contact}</a>
-          <a href={portalHref('/ge-energy-tech/shipping-tracking')}>{navExtra.tracking}</a>
-          <a href={portalHref('/ge-energy-tech/after-sales-chat')}>{navExtra.afterSales}</a>
+          <a href={portalHref('/shipping-tracking')}>{navExtra.tracking}</a>
+          <a href={portalHref('/after-sales-chat')}>{navExtra.afterSales}</a>
         </div>
         <div className="get-nav-actions">
           <a href={portalHref('/ge-energy-erp-login')} className="get-nav-btn get-nav-btn--admin">
@@ -1515,8 +1515,8 @@ export default function GePage() {
                   <a href={portalHref('/register-geet')}>{t.footer.portalLinks.register}</a>
                   <a href={portalHref('/ge-energy-tech/login')}>{t.footer.portalLinks.signIn}</a>
                   <a href={portalHref('/ge-energy-erp-login')}>{t.footer.portalLinks.admin}</a>
-                  <a href={portalHref('/ge-energy-tech/shipping-tracking')}>{t.footer.portalLinks.shipping}</a>
-                  <a href={portalHref('/ge-energy-tech/after-sales-chat')}>{t.footer.portalLinks.afterSales}</a>
+                  <a href={portalHref('/shipping-tracking')}>{t.footer.portalLinks.shipping}</a>
+                  <a href={portalHref('/after-sales-chat')}>{t.footer.portalLinks.afterSales}</a>
                 </div>
               ) : null}
             </div>
