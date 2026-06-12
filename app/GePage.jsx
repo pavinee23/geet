@@ -1137,7 +1137,7 @@ export default function GePage() {
           <a href={portalHref('/register-geet')} className="get-nav-btn get-nav-btn--register">
             {t.nav.register}
           </a>
-          <a href={portalHref('/ge-energy-tech/login')} className="get-nav-btn get-nav-btn--signin">
+          <a href={'/login'} className="get-nav-btn get-nav-btn--signin">
             {t.nav.signIn}
           </a>
         </div>
@@ -1182,7 +1182,7 @@ export default function GePage() {
             </div>
             <div className="get-hero-platform">
               <a href={portalHref('/register-geet')} className="get-hero-platform-btn">{t.nav.register}</a>
-              <a href={portalHref('/ge-energy-tech/login')} className="get-hero-platform-btn get-hero-platform-btn--primary">{t.nav.signIn}</a>
+              <a href={'/login'} className="get-hero-platform-btn get-hero-platform-btn--primary">{t.nav.signIn}</a>
               <a href={portalHref('/ge-energy-erp-login')} className="get-hero-platform-btn get-hero-platform-btn--admin">{t.nav.admin}</a>
             </div>
             <div className="get-hero-stats">
@@ -1539,7 +1539,7 @@ export default function GePage() {
               {legalOpen === 'portals' ? (
                 <div className="get-legal-portals">
                   <a href={portalHref('/register-geet')}>{t.footer.portalLinks.register}</a>
-                  <a href={portalHref('/ge-energy-tech/login')}>{t.footer.portalLinks.signIn}</a>
+                  <a href={'/login'}>{t.footer.portalLinks.signIn}</a>
                   <a href={portalHref('/ge-energy-erp-login')}>{t.footer.portalLinks.admin}</a>
                   <a href={portalHref('/shipping-tracking')}>{t.footer.portalLinks.shipping}</a>
                   <a href={portalHref('/after-sales-chat')}>{t.footer.portalLinks.afterSales}</a>

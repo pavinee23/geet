@@ -23,3 +23,9 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Contact form
 
 `POST /api/contact` sends email via Gmail SMTP (or other provider in `lib/smtp-config.js`).
+
+## Customer Dashboard
+
+- `/` — corporate homepage
+- `/login` — customer sign-in
+- `/customer-dashboard` — Momoge space dashboard (API via `NEXT_PUBLIC_PUBLIC_HUB_URL`)
