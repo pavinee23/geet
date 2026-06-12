@@ -16,7 +16,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy (Vercel)
 
-1. Connect this repo: [pavinee23/geet](https://github.com/pavinee23/geet)
+1. Connect this repo: [geserverhub/ge-energytech](https://github.com/geserverhub/ge-energytech)
 2. Add environment variables from `.env.local.example` (SMTP_* and CONTACT_TO_EMAIL)
 3. Optional: `NEXT_PUBLIC_PORTAL_BASE_URL` — base URL of your main app for Admin / Register / Sign-in links
 
