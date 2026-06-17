@@ -85,6 +85,11 @@ export default function PrivacyPolicyPage({ homeHref = '/ge-energy-tech' }) {
                   {t.emailLabel}:{' '}
                   <a href={`mailto:${t.contactEmail}`}>{t.contactEmail}</a>
                 </p>
+                {t.contactFax ? (
+                  <p>
+                    {t.faxLabel}: {t.contactFax}
+                  </p>
+                ) : null}
                 <p>
                   {t.addressLabel}: {address}
                 </p>

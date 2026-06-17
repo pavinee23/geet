@@ -21,6 +21,9 @@ function portalHref(path) {
 }
 
 /** GE ENERGY TECH CO., LTD. — registered office (Ansan, Gyeonggi-do, Korea) */
+const GEET_CONTACT_EMAIL = 'crm.support@ge-energytech.com';
+const GEET_CONTACT_FAX = '0504-389-1761';
+
 const GEET_COMPANY_ADDRESS = {
   ko: '경기도 안산시 상록구 월피동 445-28 301호',
   en: 'Unit 301, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, Republic of Korea',
@@ -114,6 +117,8 @@ const TRANSLATIONS = {
       company: 'บริษัท',
       address: 'ที่อยู่',
       addressValue: 'สาธารณรัฐเกาหลี',
+      contactEmailLabel: 'อีเมลติดต่อ',
+      faxLabel: 'แฟกซ์',
       systems: 'ระบบ',
       systemsValue: 'แดชบอร์ดพลังงาน · แพลตฟอร์ม IoT',
       languages: 'ภาษา',
@@ -240,6 +245,8 @@ const TRANSLATIONS = {
       company: 'Company',
       address: 'Address',
       addressValue: 'Republic of Korea',
+      contactEmailLabel: 'Contact Email',
+      faxLabel: 'FAX',
       systems: 'Systems',
       systemsValue: 'Energy Dashboard · IoT Platform',
       languages: 'Languages',
@@ -371,6 +378,8 @@ const LANGUAGE_OVERRIDES = {
       company: '公司',
       address: '地址',
       addressValue: '大韩民国',
+      contactEmailLabel: '联系邮箱',
+      faxLabel: '传真',
       systems: '系统',
       systemsValue: '能源看板 · IoT 平台',
       languages: '语言',
@@ -457,6 +466,8 @@ const LANGUAGE_OVERRIDES = {
       company: 'Công ty',
       address: 'Địa chỉ',
       addressValue: 'Hàn Quốc',
+      contactEmailLabel: 'Email liên hệ',
+      faxLabel: 'FAX',
       systems: 'Hệ thống',
       systemsValue: 'Bảng điều khiển năng lượng · Nền tảng IoT',
       languages: 'Ngôn ngữ',
@@ -543,6 +554,8 @@ const LANGUAGE_OVERRIDES = {
       company: '회사',
       address: '주소',
       addressValue: '대한민국',
+      contactEmailLabel: '문의 이메일',
+      faxLabel: '팩스',
       systems: '시스템',
       systemsValue: '에너지 대시보드 · IoT 플랫폼',
       languages: '언어',
@@ -629,6 +642,8 @@ const LANGUAGE_OVERRIDES = {
       company: '会社名',
       address: '所在地',
       addressValue: '大韓民国',
+      contactEmailLabel: 'お問い合わせメール',
+      faxLabel: 'FAX',
       systems: 'システム',
       systemsValue: 'エネルギーダッシュボード · IoTプラットフォーム',
       languages: '言語',
@@ -715,6 +730,8 @@ const LANGUAGE_OVERRIDES = {
       company: '公司',
       address: '地址',
       addressValue: '大韓民國',
+      contactEmailLabel: '聯絡電子郵件',
+      faxLabel: '傳真',
       systems: '系統',
       systemsValue: '能源儀表板 · IoT 平台',
       languages: '語言',
@@ -801,6 +818,8 @@ const LANGUAGE_OVERRIDES = {
       company: 'Syarikat',
       address: 'Alamat',
       addressValue: 'Republik Korea',
+      contactEmailLabel: 'E-mel hubungan',
+      faxLabel: 'FAX',
       systems: 'Sistem',
       systemsValue: 'Papan pemuka tenaga · Platform IoT',
       languages: 'Bahasa',
@@ -1137,7 +1156,7 @@ export default function GePage() {
           <a href={portalHref('/register-geet')} className="get-nav-btn get-nav-btn--register">
             {t.nav.register}
           </a>
-          <a href={'/login'} className="get-nav-btn get-nav-btn--signin">
+          <a href={portalHref('/ge-energy-tech/login')} className="get-nav-btn get-nav-btn--signin">
             {t.nav.signIn}
           </a>
         </div>
@@ -1182,7 +1201,7 @@ export default function GePage() {
             </div>
             <div className="get-hero-platform">
               <a href={portalHref('/register-geet')} className="get-hero-platform-btn">{t.nav.register}</a>
-              <a href={'/login'} className="get-hero-platform-btn get-hero-platform-btn--primary">{t.nav.signIn}</a>
+              <a href={portalHref('/ge-energy-tech/login')} className="get-hero-platform-btn get-hero-platform-btn--primary">{t.nav.signIn}</a>
               <a href={portalHref('/ge-energy-erp-login')} className="get-hero-platform-btn get-hero-platform-btn--admin">{t.nav.admin}</a>
             </div>
             <div className="get-hero-stats">
@@ -1395,6 +1414,22 @@ export default function GePage() {
                   </div>
                 </div>
                 <div className="get-contact-item">
+                  <span className="get-contact-item-icon">✉️</span>
+                  <div className="get-contact-item-text">
+                    <strong>{t.contact.contactEmailLabel}</strong>
+                    <span>
+                      <a href={`mailto:${GEET_CONTACT_EMAIL}`}>{GEET_CONTACT_EMAIL}</a>
+                    </span>
+                  </div>
+                </div>
+                <div className="get-contact-item">
+                  <span className="get-contact-item-icon">📠</span>
+                  <div className="get-contact-item-text">
+                    <strong>{t.contact.faxLabel}</strong>
+                    <span>{GEET_CONTACT_FAX}</span>
+                  </div>
+                </div>
+                <div className="get-contact-item">
                   <span className="get-contact-item-icon">🌐</span>
                   <div className="get-contact-item-text">
                     <strong>{t.contact.systems}</strong>
@@ -1539,7 +1574,7 @@ export default function GePage() {
               {legalOpen === 'portals' ? (
                 <div className="get-legal-portals">
                   <a href={portalHref('/register-geet')}>{t.footer.portalLinks.register}</a>
-                  <a href={'/login'}>{t.footer.portalLinks.signIn}</a>
+                  <a href={portalHref('/ge-energy-tech/login')}>{t.footer.portalLinks.signIn}</a>
                   <a href={portalHref('/ge-energy-erp-login')}>{t.footer.portalLinks.admin}</a>
                   <a href={portalHref('/shipping-tracking')}>{t.footer.portalLinks.shipping}</a>
                   <a href={portalHref('/after-sales-chat')}>{t.footer.portalLinks.afterSales}</a>

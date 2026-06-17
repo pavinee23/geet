@@ -1335,6 +1335,15 @@ body {
   line-height: 1.5;
 }
 
+.get-contact-item-text a {
+  color: var(--get-accent);
+  text-decoration: none;
+}
+
+.get-contact-item-text a:hover {
+  text-decoration: underline;
+}
+
 .get-contact-form {
   display: flex;
   flex-direction: column;
