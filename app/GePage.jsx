@@ -22,7 +22,8 @@ function portalHref(path) {
 
 /** GE ENERGY TECH CO., LTD. — registered office (Ansan, Gyeonggi-do, Korea) */
 const GEET_CONTACT_EMAIL = 'crm.support@ge-energytech.com';
-const GEET_CONTACT_FAX = '0504-389-1761';
+const GEET_CONTACT_TEL = '010-8488-0865';
+const GEET_CONTACT_FAX = '050-8958-0865';
 
 const GEET_COMPANY_ADDRESS = {
   ko: '경기도 안산시 상록구 월피동 445-28 301호',
