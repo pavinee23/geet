@@ -26,14 +26,14 @@ const GEET_CONTACT_TEL = '010-8488-0865';
 const GEET_CONTACT_FAX = '050-8958-0865';
 
 const GEET_COMPANY_ADDRESS = {
-  ko: '경기도 안산시 상록구 월피동 445-28 301호',
-  en: 'Unit 301, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, Republic of Korea',
-  th: 'ห้อง 301, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, สาธารณรัฐเกาหลี',
-  zh: '韩国京畿道安山市常绿区月피洞445-28 301号',
-  vi: 'Phòng 301, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, Hàn Quốc',
-  ja: '韓国 京畿道 安山市 常緑区 月피洞 445-28 301号',
-  'zh-tw': '韓國京畿道安山市常綠區月피洞445-28 301號',
-  ms: 'Unit 301, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, Republik Korea',
+  ko: '경기도 안산시 상록구 월피동 445-28 301-J1호',
+  en: 'Unit 301-J1, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, Republic of Korea',
+  th: 'ห้อง 301-J1, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, สาธารณรัฐเกาหลี',
+  zh: '韩国京畿道安山市常绿区月피洞445-28 301-J1号',
+  vi: 'Phòng 301-J1, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, Hàn Quốc',
+  ja: '韓国 京畿道 安山市 常緑区 月피洞 445-28 301-J1号',
+  'zh-tw': '韓國京畿道安山市常綠區月피洞445-28 301-J1號',
+  ms: 'Unit 301-J1, 445-28 Wollipi-dong, Sangnok-gu, Ansan-si, Gyeonggi-do, Republik Korea',
 };
 
 function geetCompanyAddress(lang) {
@@ -119,6 +119,7 @@ const TRANSLATIONS = {
       address: 'ที่อยู่',
       addressValue: 'สาธารณรัฐเกาหลี',
       contactEmailLabel: 'อีเมลติดต่อ',
+      telLabel: 'เบอร์โทร',
       faxLabel: 'แฟกซ์',
       systems: 'ระบบ',
       systemsValue: 'แดชบอร์ดพลังงาน · แพลตฟอร์ม IoT',
@@ -247,6 +248,7 @@ const TRANSLATIONS = {
       address: 'Address',
       addressValue: 'Republic of Korea',
       contactEmailLabel: 'Contact Email',
+      telLabel: 'Tel.',
       faxLabel: 'FAX',
       systems: 'Systems',
       systemsValue: 'Energy Dashboard · IoT Platform',
@@ -380,6 +382,7 @@ const LANGUAGE_OVERRIDES = {
       address: '地址',
       addressValue: '大韩民国',
       contactEmailLabel: '联系邮箱',
+      telLabel: '电话',
       faxLabel: '传真',
       systems: '系统',
       systemsValue: '能源看板 · IoT 平台',
@@ -468,6 +471,7 @@ const LANGUAGE_OVERRIDES = {
       address: 'Địa chỉ',
       addressValue: 'Hàn Quốc',
       contactEmailLabel: 'Email liên hệ',
+      telLabel: 'Điện thoại',
       faxLabel: 'FAX',
       systems: 'Hệ thống',
       systemsValue: 'Bảng điều khiển năng lượng · Nền tảng IoT',
@@ -556,6 +560,7 @@ const LANGUAGE_OVERRIDES = {
       address: '주소',
       addressValue: '대한민국',
       contactEmailLabel: '문의 이메일',
+      telLabel: '전화',
       faxLabel: '팩스',
       systems: '시스템',
       systemsValue: '에너지 대시보드 · IoT 플랫폼',
@@ -644,6 +649,7 @@ const LANGUAGE_OVERRIDES = {
       address: '所在地',
       addressValue: '大韓民国',
       contactEmailLabel: 'お問い合わせメール',
+      telLabel: '電話',
       faxLabel: 'FAX',
       systems: 'システム',
       systemsValue: 'エネルギーダッシュボード · IoTプラットフォーム',
@@ -732,6 +738,7 @@ const LANGUAGE_OVERRIDES = {
       address: '地址',
       addressValue: '大韓民國',
       contactEmailLabel: '聯絡電子郵件',
+      telLabel: '電話',
       faxLabel: '傳真',
       systems: '系統',
       systemsValue: '能源儀表板 · IoT 平台',
@@ -820,6 +827,7 @@ const LANGUAGE_OVERRIDES = {
       address: 'Alamat',
       addressValue: 'Republik Korea',
       contactEmailLabel: 'E-mel hubungan',
+      telLabel: 'Tel.',
       faxLabel: 'FAX',
       systems: 'Sistem',
       systemsValue: 'Papan pemuka tenaga · Platform IoT',
@@ -1420,6 +1428,15 @@ export default function GePage() {
                     <strong>{t.contact.contactEmailLabel}</strong>
                     <span>
                       <a href={`mailto:${GEET_CONTACT_EMAIL}`}>{GEET_CONTACT_EMAIL}</a>
+                    </span>
+                  </div>
+                </div>
+                <div className="get-contact-item">
+                  <span className="get-contact-item-icon">📞</span>
+                  <div className="get-contact-item-text">
+                    <strong>{t.contact.telLabel}</strong>
+                    <span>
+                      <a href={`tel:${GEET_CONTACT_TEL.replace(/-/g, '')}`}>{GEET_CONTACT_TEL}</a>
                     </span>
                   </div>
                 </div>
